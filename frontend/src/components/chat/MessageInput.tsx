@@ -2,11 +2,15 @@ import { useState, FormEvent, useRef, useEffect, useCallback } from 'react';
 import { useChat } from '../../hooks/useChat';
 import { useThemeStore } from '../../store/themeStore';
 import { Send, Smile } from 'lucide-react';
-import EmojiPicker, { Theme, EmojiClickData } from 'emoji-picker-react';
+import EmojiPicker, { Theme, EmojiClickData, SkinTones, SkinTonePickerLocation } from 'emoji-picker-react';
 
 export function MessageInput() {
   const [content, setContent] = useState('');
   const [showPicker, setShowPicker] = useState(false);
+  const [skinTone, setSkinTone] = useState<SkinTones>(() => {
+    const stored = localStorage.getItem('chatterbox-skin-tone');
+    return (stored as SkinTones) || SkinTones.NEUTRAL;
+  });
   const { sendMessage, emitTyping } = useChat();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +83,16 @@ export function MessageInput() {
         </button>
         {showPicker && (
           <div className="absolute bottom-full mb-2 left-0 z-50 max-w-[calc(100vw-2rem)]">
-            <EmojiPicker theme={appTheme === 'dark' ? Theme.DARK : Theme.LIGHT} onEmojiClick={onEmojiClick} />
+            <EmojiPicker
+              theme={appTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
+              onEmojiClick={onEmojiClick}
+              defaultSkinTone={skinTone}
+              skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
+              onSkinToneChange={(tone) => {
+                setSkinTone(tone);
+                localStorage.setItem('chatterbox-skin-tone', tone);
+              }}
+            />
           </div>
         )}
       </div>
