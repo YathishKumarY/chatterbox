@@ -56,13 +56,11 @@ interface ChatState {
   nextCursors: Record<string, string | null>;
   isLoadingConversations: boolean;
   isLoadingMessages: boolean;
-  showArchived: boolean;
   isLoadingArchived: boolean;
 
   setActiveConversation: (id: string | null) => void;
   fetchConversations: () => Promise<void>;
   fetchArchivedConversations: () => Promise<void>;
-  toggleShowArchived: () => void;
   fetchMessages: (conversationId: string, loadMore?: boolean) => Promise<void>;
   addMessage: (message: Message) => void;
   addOptimisticMessage: (conversationId: string, content: string, sender: Message['sender'], clientMessageId: string) => string;
@@ -84,7 +82,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
   nextCursors: {},
   isLoadingConversations: false,
   isLoadingMessages: false,
-  showArchived: false,
   isLoadingArchived: false,
 
   setActiveConversation: (id) => set({ activeConversationId: id }),
@@ -110,14 +107,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
     } catch {
       set({ isLoadingArchived: false });
     }
-  },
-
-  toggleShowArchived: () => {
-    const { showArchived } = get();
-    if (!showArchived) {
-      get().fetchArchivedConversations();
-    }
-    set({ showArchived: !showArchived });
   },
 
   fetchMessages: async (conversationId, loadMore = false) => {
@@ -267,7 +256,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: state.conversations.filter((c) => c.id !== conversationId),
       activeConversationId: state.activeConversationId === conversationId ? null : state.activeConversationId,
     }));
-    if (get().showArchived) {
+    if (get().archivedConversations.length > 0) {
       get().fetchArchivedConversations();
     }
   },

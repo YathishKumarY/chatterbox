@@ -10,7 +10,7 @@ import { SearchUsers } from './SearchUsers';
 import { CreateGroup } from './CreateGroup';
 import { ContactRequests } from './ContactRequests';
 import { Settings } from './Settings';
-import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon, Archive, ChevronRight } from 'lucide-react';
+import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon, Archive, ArrowLeft } from 'lucide-react';
 
 export function ConversationList() {
   const conversations = useChatStore((s) => s.conversations);
@@ -18,8 +18,7 @@ export function ConversationList() {
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const fetchConversations = useChatStore((s) => s.fetchConversations);
-  const showArchived = useChatStore((s) => s.showArchived);
-  const toggleShowArchived = useChatStore((s) => s.toggleShowArchived);
+  const fetchArchivedConversations = useChatStore((s) => s.fetchArchivedConversations);
   const isLoadingArchived = useChatStore((s) => s.isLoadingArchived);
   const user = useAuthStore((s) => s.user);
   const incomingRequests = useContactStore((s) => s.incomingRequests);
@@ -29,6 +28,7 @@ export function ConversationList() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; isArchived: boolean; x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -41,6 +41,7 @@ export function ConversationList() {
     setShowCreateGroup(false);
     setShowRequests(false);
     setShowSettings(false);
+    setShowArchived(false);
   }, []);
 
   const shortcuts = useMemo(() => ({
@@ -48,11 +49,11 @@ export function ConversationList() {
     onCreateGroup: () => { closeAll(); setShowCreateGroup(true); },
     onSettings: () => { closeAll(); setShowSettings(true); },
     onEscape: () => {
-      if (showSearch || showCreateGroup || showRequests || showSettings) {
+      if (showSearch || showCreateGroup || showRequests || showSettings || showArchived) {
         closeAll();
       }
     },
-  }), [closeAll, showSearch, showCreateGroup, showRequests, showSettings]);
+  }), [closeAll, showSearch, showCreateGroup, showRequests, showSettings, showArchived]);
 
   useKeyboardShortcuts(shortcuts);
 
@@ -90,6 +91,13 @@ export function ConversationList() {
           >
             <Search className="w-5 h-5 text-cb-text-secondary" />
           </button>
+          <button
+            onClick={() => { closeAll(); setShowArchived(true); fetchArchivedConversations(); }}
+            className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
+            title="Archived chats"
+          >
+            <Archive className="w-5 h-5 text-cb-text-secondary" />
+          </button>
         </div>
       </div>
 
@@ -98,44 +106,7 @@ export function ConversationList() {
       {showCreateGroup && <CreateGroup onClose={() => setShowCreateGroup(false)} />}
 
       <div className="flex-1 overflow-y-auto">
-        <button
-          onClick={toggleShowArchived}
-          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-cb-surface-hover border-b border-cb-border-light transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-cb-surface-active flex items-center justify-center flex-shrink-0">
-            <Archive className="w-5 h-5 text-cb-text-secondary" />
-          </div>
-          <span className="flex-1 text-sm font-medium text-cb-text-primary text-left">Archived</span>
-          <ChevronRight
-            className={`w-4 h-4 text-cb-text-muted transition-transform ${showArchived ? 'rotate-90' : ''}`}
-          />
-        </button>
-
-        {showArchived && (
-          <div className="bg-cb-surface-active/30">
-            {isLoadingArchived ? (
-              <div className="px-4 py-3 text-sm text-cb-text-muted text-center">Loading...</div>
-            ) : archivedConversations.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-cb-text-muted text-center">No archived chats</div>
-            ) : (
-              archivedConversations.map((conv) => (
-                <ConversationItem
-                  key={conv.id}
-                  conversation={conv}
-                  isActive={conv.id === activeConversationId}
-                  currentUserId={user?.id || ''}
-                  onClick={() => setActiveConversation(conv.id)}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: true, x: e.clientX, y: e.clientY });
-                  }}
-                />
-              ))
-            )}
-          </div>
-        )}
-
-        {conversations.length === 0 && !showArchived ? (
+        {conversations.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-cb-text-muted p-4">
             <MessageCircle className="w-16 h-16 mb-2" />
             <p className="text-center">No conversations yet. Search for users to start chatting!</p>
@@ -181,6 +152,44 @@ export function ConversationList() {
       </div>
 
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
+
+      {showArchived && (
+        <div className="absolute inset-0 z-40 flex flex-col bg-cb-surface">
+          <div className="bg-cb-panel px-4 py-3 flex items-center gap-3 border-b border-cb-border">
+            <button
+              onClick={() => setShowArchived(false)}
+              className="p-1 rounded-full hover:bg-cb-surface-active transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-cb-text-secondary" />
+            </button>
+            <h3 className="font-medium text-cb-text-primary">Archived Chats</h3>
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            {isLoadingArchived ? (
+              <div className="flex items-center justify-center h-32 text-sm text-cb-text-muted">Loading...</div>
+            ) : archivedConversations.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-cb-text-muted p-4">
+                <Archive className="w-16 h-16 mb-2" />
+                <p className="text-center">No archived chats</p>
+              </div>
+            ) : (
+              archivedConversations.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conversation={conv}
+                  isActive={conv.id === activeConversationId}
+                  currentUserId={user?.id || ''}
+                  onClick={() => { setActiveConversation(conv.id); setShowArchived(false); }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: true, x: e.clientX, y: e.clientY });
+                  }}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
