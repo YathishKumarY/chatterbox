@@ -95,19 +95,22 @@ export function ConversationList() {
             <Users className="w-5 h-5 text-cb-text-secondary" />
           </button>
           <button
-            onClick={() => { closeAll(); setShowSearch(!showSearch); }}
-            className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
-            title="Search users (Ctrl+N)"
-          >
-            <Search className="w-5 h-5 text-cb-text-secondary" />
-          </button>
-          <button
             onClick={() => { closeAll(); setShowArchived(true); fetchArchivedConversations(); }}
             className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
             title="Archived chats"
           >
             <Archive className="w-5 h-5 text-cb-text-secondary" />
           </button>
+        </div>
+      </div>
+
+      <div
+        className="px-3 py-2 border-b border-cb-border bg-cb-panel cursor-text"
+        onClick={() => { closeAll(); setShowSearch(true); }}
+      >
+        <div className="flex items-center gap-2 bg-cb-input-bg rounded-lg px-3 py-1.5">
+          <Search className="w-4 h-4 text-cb-text-muted flex-shrink-0" />
+          <span className="text-sm text-cb-text-muted">Search users</span>
         </div>
       </div>
 
