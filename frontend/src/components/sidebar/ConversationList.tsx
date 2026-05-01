@@ -30,9 +30,9 @@ export function ConversationList() {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <div className="bg-whatsapp-panel px-4 py-3 flex items-center justify-between">
+      <div className="bg-cb-panel px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2 min-w-0 flex-shrink">
-          <div className="w-10 h-10 rounded-full bg-whatsapp-teal flex items-center justify-center text-white font-bold flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-cb-teal flex items-center justify-center text-white font-bold flex-shrink-0">
             {user?.username?.charAt(0).toUpperCase()}
           </div>
           <span className="font-medium text-gray-700 truncate">{user?.username}</span>

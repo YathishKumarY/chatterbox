@@ -66,7 +66,7 @@ export function MessageInput() {
   }, [content]);
 
   return (
-    <form onSubmit={handleSubmit} className="bg-whatsapp-panel px-4 py-3 flex items-end gap-3">
+    <form onSubmit={handleSubmit} className="bg-cb-panel px-4 py-3 flex items-end gap-3">
       <div className="relative" ref={pickerRef}>
         <button
           type="button"
@@ -88,14 +88,14 @@ export function MessageInput() {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         rows={1}
-        className="flex-1 bg-white rounded-lg px-4 py-2 outline-none resize-none text-sm max-h-32 border border-gray-200 focus:border-whatsapp-teal"
+        className="flex-1 bg-white rounded-lg px-4 py-2 outline-none resize-none text-sm max-h-32 border border-gray-200 focus:border-cb-teal"
         placeholder="Type a message"
         style={{ minHeight: '40px' }}
       />
       <button
         type="submit"
         disabled={!content.trim()}
-        className="bg-whatsapp-teal text-white p-2 rounded-full hover:bg-whatsapp-dark transition-colors disabled:opacity-50 flex-shrink-0"
+        className="bg-cb-teal text-white p-2 rounded-full hover:bg-cb-dark transition-colors disabled:opacity-50 flex-shrink-0"
       >
         <Send className="w-5 h-5" />
       </button>

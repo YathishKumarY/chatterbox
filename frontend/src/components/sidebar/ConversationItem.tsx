@@ -38,7 +38,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
     <div
       onClick={onClick}
       className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 transition-colors ${
-        isActive ? 'bg-whatsapp-panel' : ''
+        isActive ? 'bg-cb-panel' : ''
       }`}
     >
       <div className="relative flex-shrink-0">
@@ -46,7 +46,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
           {displayName.charAt(0).toUpperCase()}
         </div>
         {online && (
-          <div className="absolute bottom-0 right-0 w-3 h-3 bg-whatsapp-green rounded-full border-2 border-white" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 bg-cb-green rounded-full border-2 border-white" />
         )}
       </div>
 
@@ -64,7 +64,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
               : 'No messages yet'}
           </p>
           {conversation.unreadCount > 0 && (
-            <span className="bg-whatsapp-green text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 ml-2">
+            <span className="bg-cb-green text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 ml-2">
               {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
             </span>
           )}

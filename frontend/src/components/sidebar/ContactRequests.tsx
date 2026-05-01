@@ -13,7 +13,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="border-b border-gray-200 bg-white">
-      <div className="flex items-center justify-between px-4 py-3 bg-whatsapp-teal text-white">
+      <div className="flex items-center justify-between px-4 py-3 bg-cb-teal text-white">
         <span className="font-medium">Contact Requests</span>
         <button onClick={onClose}>
           <X className="w-5 h-5" />
@@ -41,7 +41,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => respondToRequest(req.id, true)}
-                  className="p-1.5 rounded-full bg-whatsapp-teal text-white hover:bg-whatsapp-dark transition-colors"
+                  className="p-1.5 rounded-full bg-cb-teal text-white hover:bg-cb-dark transition-colors"
                   title="Accept"
                 >
                   <UserCheck className="w-4 h-4" />

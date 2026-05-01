@@ -6,7 +6,7 @@ const SOCKET_URL =
   (typeof window !== 'undefined'
     ? `${window.location.protocol}//${window.location.hostname}:3001`
     : 'http://localhost:3001');
-const DEVICE_ID_KEY = 'whatsapp_device_id';
+const DEVICE_ID_KEY = 'chatterbox_device_id';
 
 function getDeviceId(): string {
   let deviceId = localStorage.getItem(DEVICE_ID_KEY);

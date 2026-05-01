@@ -96,7 +96,7 @@ export function SearchUsers({ onClose }: { onClose: () => void }) {
                 {user.contactStatus === 'contact' && (
                   <button
                     onClick={() => startChat(user.id)}
-                    className="text-xs bg-whatsapp-teal text-white px-3 py-1 rounded-full hover:bg-whatsapp-dark transition-colors"
+                    className="text-xs bg-cb-teal text-white px-3 py-1 rounded-full hover:bg-cb-dark transition-colors"
                   >
                     Message
                   </button>
@@ -115,7 +115,7 @@ export function SearchUsers({ onClose }: { onClose: () => void }) {
                   <button
                     onClick={() => handleSendRequest(user.id)}
                     disabled={sendingTo.has(user.id)}
-                    className="text-xs bg-whatsapp-teal text-white px-3 py-1 rounded-full hover:bg-whatsapp-dark transition-colors disabled:opacity-50 flex items-center gap-1"
+                    className="text-xs bg-cb-teal text-white px-3 py-1 rounded-full hover:bg-cb-dark transition-colors disabled:opacity-50 flex items-center gap-1"
                   >
                     <UserPlus className="w-3 h-3" /> Add
                   </button>

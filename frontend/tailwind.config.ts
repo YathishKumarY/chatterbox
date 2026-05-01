@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        whatsapp: {
+        cb: {
           green: '#25D366',
           dark: '#075E54',
           light: '#DCF8C6',

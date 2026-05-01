@@ -23,8 +23,8 @@ export function OAuthCallback() {
   }, [searchParams, handleOAuthCallback, navigate]);
 
   return (
-    <div className="min-h-screen bg-whatsapp-bg flex items-center justify-center">
-      <div className="text-whatsapp-dark text-lg">Signing you in...</div>
+    <div className="min-h-screen bg-cb-bg flex items-center justify-center">
+      <div className="text-cb-dark text-lg">Signing you in...</div>
     </div>
   );
 }

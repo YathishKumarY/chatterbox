@@ -17,11 +17,11 @@ export function MessageBubble({ content, createdAt, isSender, senderName, isGrou
     <div className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-1`}>
       <div
         className={`max-w-[65%] px-3 py-1.5 rounded-lg relative ${
-          isSender ? 'bg-whatsapp-light' : 'bg-white'
+          isSender ? 'bg-cb-light' : 'bg-white'
         } ${pending ? 'opacity-60' : ''} ${failed ? 'border border-red-400' : ''} shadow-sm`}
       >
         {isGroup && !isSender && senderName && (
-          <p className="text-xs font-medium text-whatsapp-teal mb-0.5">{senderName}</p>
+          <p className="text-xs font-medium text-cb-teal mb-0.5">{senderName}</p>
         )}
         <div className="flex items-end gap-1">
           <p className="text-sm text-gray-900 whitespace-pre-wrap break-words">{content}</p>

@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: whatsapp_chat
+      POSTGRES_DB: chatterbox
     ports:
       - "5432:5432"
     volumes:
@@ -32,7 +32,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment: &backend-env
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/whatsapp_chat
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/chatterbox
       REDIS_URL: redis://redis:6379
       JWT_SECRET: dev-jwt-secret-change-in-production-must-be-long
       JWT_REFRESH_SECRET: dev-refresh-secret-change-in-production-must-be-long

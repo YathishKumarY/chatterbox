@@ -83,8 +83,8 @@ export function useSocket() {
       useContactStore.getState().addContact(data.user);
     });
 
-    const lastSyncAt = localStorage.getItem('whatsapp_last_sync') || new Date(0).toISOString();
-    const deviceId = localStorage.getItem('whatsapp_device_id') || '';
+    const lastSyncAt = localStorage.getItem('chatterbox_last_sync') || new Date(0).toISOString();
+    const deviceId = localStorage.getItem('chatterbox_device_id') || '';
 
     socket.emit('device:sync', { deviceId, lastSyncAt }, (response: { success: boolean; messages?: any[] }) => {
       if (response.success && response.messages) {
@@ -105,7 +105,7 @@ export function useSocket() {
     });
 
     return () => {
-      localStorage.setItem('whatsapp_last_sync', new Date().toISOString());
+      localStorage.setItem('chatterbox_last_sync', new Date().toISOString());
       socketRef.current = false;
       disconnectSocket();
     };

@@ -42,7 +42,7 @@ export function ChatHeader({ name, isGroup, participants, onBack }: Props) {
   }
 
   return (
-    <div className="bg-whatsapp-panel px-4 py-3 flex items-center gap-3 border-b border-gray-200">
+    <div className="bg-cb-panel px-4 py-3 flex items-center gap-3 border-b border-gray-200">
       {onBack && (
         <button onClick={onBack} className="p-1 rounded-full hover:bg-gray-200 md:hidden">
           <ArrowLeft className="w-5 h-5 text-gray-600" />
@@ -55,7 +55,7 @@ export function ChatHeader({ name, isGroup, participants, onBack }: Props) {
 
       <div className="flex-1 min-w-0">
         <h3 className="font-medium text-gray-900 truncate">{name}</h3>
-        <p className={`text-xs truncate ${typingNames.length > 0 ? 'text-whatsapp-teal' : 'text-gray-500'}`}>
+        <p className={`text-xs truncate ${typingNames.length > 0 ? 'text-cb-teal' : 'text-gray-500'}`}>
           {subtitle}
         </p>
       </div>

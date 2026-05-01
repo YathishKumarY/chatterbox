@@ -21,7 +21,7 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold text-whatsapp-dark">Create Account</h2>
+      <h2 className="text-2xl font-bold text-cb-dark">Create Account</h2>
 
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">{error}</div>
@@ -33,7 +33,7 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-whatsapp-teal focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cb-teal focus:border-transparent outline-none"
           placeholder="johndoe"
           minLength={3}
           required
@@ -46,7 +46,7 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-whatsapp-teal focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cb-teal focus:border-transparent outline-none"
           placeholder="you@example.com"
           required
         />
@@ -58,7 +58,7 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-whatsapp-teal focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cb-teal focus:border-transparent outline-none"
           placeholder="Min 6 characters"
           minLength={6}
           required
@@ -68,14 +68,14 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-whatsapp-teal text-white py-2 rounded-lg hover:bg-whatsapp-dark transition-colors disabled:opacity-50"
+        className="w-full bg-cb-teal text-white py-2 rounded-lg hover:bg-cb-dark transition-colors disabled:opacity-50"
       >
         {isLoading ? 'Creating account...' : 'Sign Up'}
       </button>
 
       <p className="text-center text-sm text-gray-600">
         Already have an account?{' '}
-        <button type="button" onClick={onSwitch} className="text-whatsapp-teal hover:underline">
+        <button type="button" onClick={onSwitch} className="text-cb-teal hover:underline">
           Sign in
         </button>
       </p>

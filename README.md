@@ -1,4 +1,4 @@
-# WhatsApp Chat
+# ChatterBox
 
 A real-time chat application with 1-on-1 and group conversations, message status tracking, typing indicators, and online/offline presence.
 
@@ -31,10 +31,10 @@ A real-time chat application with 1-on-1 and group conversations, message status
 Using Podman:
 
 ```bash
-podman run -d --name whatsapp-pg \
+podman run -d --name chatterbox-pg \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=whatsapp_chat \
+  -e POSTGRES_DB=chatterbox \
   -p 5432:5432 \
   docker.io/library/postgres:16-alpine
 ```
@@ -42,10 +42,10 @@ podman run -d --name whatsapp-pg \
 Or Docker:
 
 ```bash
-docker run -d --name whatsapp-pg \
+docker run -d --name chatterbox-pg \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=whatsapp_chat \
+  -e POSTGRES_DB=chatterbox \
   -p 5432:5432 \
   postgres:16-alpine
 ```
@@ -106,7 +106,7 @@ This starts PostgreSQL, backend, and frontend. Open http://localhost:5173.
 ## Project Structure
 
 ```
-whatsapp-chat/
+chatterbox/
 ├── docker-compose.yml
 ├── .env.example
 ├── backend/

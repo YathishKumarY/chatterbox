@@ -39,7 +39,7 @@ export function AppLayout() {
   }, [sidebarWidth]);
 
   return (
-    <div className="flex h-screen bg-whatsapp-bg">
+    <div className="flex h-screen bg-cb-bg">
       <div
         className={`border-r border-gray-200 ${
           activeConversationId ? 'hidden md:flex md:flex-col' : 'flex flex-col w-full md:w-auto'
@@ -51,7 +51,7 @@ export function AppLayout() {
 
       <div
         onMouseDown={handleMouseDown}
-        className="hidden md:flex w-1 cursor-col-resize hover:bg-whatsapp-teal/40 active:bg-whatsapp-teal/60 transition-colors flex-shrink-0"
+        className="hidden md:flex w-1 cursor-col-resize hover:bg-cb-teal/40 active:bg-cb-teal/60 transition-colors flex-shrink-0"
       />
 
       <div

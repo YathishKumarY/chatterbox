@@ -47,7 +47,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="border-b border-gray-200 bg-white">
-      <div className="flex items-center justify-between px-4 py-3 bg-whatsapp-teal text-white">
+      <div className="flex items-center justify-between px-4 py-3 bg-cb-teal text-white">
         <span className="font-medium">{step === 'select' ? 'Add group members' : 'Group name'}</span>
         <button onClick={onClose}>
           <X className="w-5 h-5" />
@@ -61,7 +61,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
               {selected.map((u) => (
                 <span
                   key={u.id}
-                  className="flex items-center gap-1 bg-whatsapp-light text-whatsapp-dark text-sm px-2 py-1 rounded-full"
+                  className="flex items-center gap-1 bg-cb-light text-cb-dark text-sm px-2 py-1 rounded-full"
                 >
                   {u.username}
                   <button onClick={() => toggleUser(u)}>
@@ -102,7 +102,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
                       {user.username.charAt(0).toUpperCase()}
                     </div>
                     <span className="text-sm flex-1 text-left">{user.username}</span>
-                    {isSelected && <Check className="w-4 h-4 text-whatsapp-teal" />}
+                    {isSelected && <Check className="w-4 h-4 text-cb-teal" />}
                   </button>
                 );
               })
@@ -113,7 +113,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
             <div className="px-4 py-2">
               <button
                 onClick={() => setStep('name')}
-                className="w-full bg-whatsapp-teal text-white py-2 rounded-lg text-sm hover:bg-whatsapp-dark transition-colors"
+                className="w-full bg-cb-teal text-white py-2 rounded-lg text-sm hover:bg-cb-dark transition-colors"
               >
                 Next ({selected.length} members selected)
               </button>
@@ -128,14 +128,14 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
             type="text"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-whatsapp-teal"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-cb-teal"
             placeholder="Group name"
             autoFocus
           />
           <button
             onClick={handleCreate}
             disabled={!groupName.trim()}
-            className="w-full bg-whatsapp-teal text-white py-2 rounded-lg text-sm hover:bg-whatsapp-dark transition-colors disabled:opacity-50"
+            className="w-full bg-cb-teal text-white py-2 rounded-lg text-sm hover:bg-cb-dark transition-colors disabled:opacity-50"
           >
             Create Group
           </button>

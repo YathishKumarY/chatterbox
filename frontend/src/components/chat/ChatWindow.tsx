@@ -60,9 +60,9 @@ export function ChatWindow() {
 
   if (!activeConversationId || !conversation) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-whatsapp-chatbg">
+      <div className="flex-1 flex flex-col items-center justify-center bg-cb-chatbg">
         <MessageCircle className="w-20 h-20 text-gray-300 mb-4" />
-        <h2 className="text-xl text-gray-500">WhatsApp Chat</h2>
+        <h2 className="text-xl text-gray-500">ChatterBox</h2>
         <p className="text-gray-400 mt-1">Select a conversation to start messaging</p>
       </div>
     );
@@ -90,7 +90,7 @@ export function ChatWindow() {
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto p-4 bg-whatsapp-chatbg"
+        className="flex-1 overflow-y-auto p-4 bg-cb-chatbg"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c5bfb0' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
