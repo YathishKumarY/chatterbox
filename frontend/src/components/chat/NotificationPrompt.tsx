@@ -12,7 +12,7 @@ export function NotificationPrompt() {
       <span className="text-sm text-cb-text-secondary">Enable notifications to stay updated</span>
       <button
         onClick={requestPermission}
-        className="text-sm text-cb-green font-medium hover:underline"
+        className="text-sm text-cb-teal font-medium hover:underline"
       >
         Enable
       </button>

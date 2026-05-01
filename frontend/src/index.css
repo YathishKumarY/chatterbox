@@ -4,39 +4,39 @@
 
 @layer base {
   :root {
-    --cb-bg: 238 234 245;
-    --cb-chatbg: 229 225 239;
-    --cb-panel: 242 239 247;
+    --cb-bg: 240 237 248;
+    --cb-chatbg: 233 229 243;
+    --cb-panel: 245 243 250;
     --cb-light: 224 214 245;
     --cb-surface: 255 255 255;
-    --cb-surface-hover: 247 245 251;
-    --cb-surface-active: 239 236 245;
-    --cb-input-bg: 245 243 249;
-    --cb-border: 221 216 232;
-    --cb-border-light: 238 234 245;
-    --cb-text-primary: 17 24 39;
-    --cb-text-secondary: 107 114 128;
-    --cb-text-muted: 156 163 175;
-    --cb-avatar-bg: 176 168 210;
-    --cb-pattern-fill: #C5BFD6;
+    --cb-surface-hover: 248 246 252;
+    --cb-surface-active: 240 237 248;
+    --cb-input-bg: 248 246 252;
+    --cb-border: 214 208 230;
+    --cb-border-light: 233 229 243;
+    --cb-text-primary: 30 25 50;
+    --cb-text-secondary: 99 90 157;
+    --cb-text-muted: 150 143 178;
+    --cb-avatar-bg: 150 140 195;
+    --cb-pattern-fill: #C8C2DA;
   }
 
   .dark {
-    --cb-bg: 26 22 37;
-    --cb-chatbg: 19 16 30;
-    --cb-panel: 37 32 54;
-    --cb-light: 61 53 102;
-    --cb-surface: 42 36 64;
-    --cb-surface-hover: 50 44 74;
-    --cb-surface-active: 58 51 84;
-    --cb-input-bg: 50 44 74;
-    --cb-border: 58 51 84;
-    --cb-border-light: 50 44 74;
-    --cb-text-primary: 233 230 242;
-    --cb-text-secondary: 160 153 180;
-    --cb-text-muted: 120 113 145;
-    --cb-avatar-bg: 72 64 108;
-    --cb-pattern-fill: #1E1A2E;
+    --cb-bg: 15 12 25;
+    --cb-chatbg: 20 17 32;
+    --cb-panel: 30 26 48;
+    --cb-light: 70 60 115;
+    --cb-surface: 38 33 60;
+    --cb-surface-hover: 48 42 72;
+    --cb-surface-active: 56 50 82;
+    --cb-input-bg: 30 26 48;
+    --cb-border: 60 53 90;
+    --cb-border-light: 48 42 72;
+    --cb-text-primary: 240 238 248;
+    --cb-text-secondary: 170 162 200;
+    --cb-text-muted: 120 112 155;
+    --cb-avatar-bg: 80 72 120;
+    --cb-pattern-fill: #1A1630;
   }
 }
 

@@ -25,7 +25,7 @@ export function Login() {
 
       <div className="bg-cb-surface rounded-2xl shadow-xl w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-2 mb-6">
-          <MessageCircle className="w-10 h-10 text-cb-green" />
+          <MessageCircle className="w-10 h-10 text-cb-teal" />
           <h1 className="text-3xl font-bold text-cb-teal">ChatterBox</h1>
         </div>
 
