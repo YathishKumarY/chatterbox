@@ -25,9 +25,9 @@ export function Chat() {
   }
 
   return (
-    <>
+    <div className="h-full flex flex-col">
       <NotificationPrompt />
       <AppLayout />
-    </>
+    </div>
   );
 }
