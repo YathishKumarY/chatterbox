@@ -45,7 +45,8 @@ router.post('/', validate(createSchema), async (req: Request, res: Response, nex
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const conversations = await conversationService.getUserConversations(req.user!.userId);
+    const includeArchived = req.query.archived === 'true';
+    const conversations = await conversationService.getUserConversations(req.user!.userId, includeArchived);
     res.json(conversations);
   } catch (err) {
     next(err);
@@ -98,6 +99,25 @@ router.patch('/:id/participants/:userId/role', async (req: Request<{ id: string;
     const { role } = req.body;
     const participant = await conversationService.updateParticipantRole(req.params.id, req.params.userId, req.user!.userId, role);
     res.json(participant);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/:id/archive', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { archive } = req.body;
+    await conversationService.archiveConversation(req.params.id, req.user!.userId, archive !== false);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    await conversationService.deleteConversation(req.params.id, req.user!.userId);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

@@ -20,9 +20,10 @@ interface Props {
   isActive: boolean;
   currentUserId: string;
   onClick: () => void;
+  onContextMenu: (e: React.MouseEvent) => void;
 }
 
-export function ConversationItem({ conversation, isActive, currentUserId, onClick }: Props) {
+export function ConversationItem({ conversation, isActive, currentUserId, onClick, onContextMenu }: Props) {
   const otherParticipant = conversation.participants.find((p) => p.userId !== currentUserId);
   const displayName = conversation.isGroup
     ? conversation.name || 'Group'
@@ -42,6 +43,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
   return (
     <div
       onClick={onClick}
+      onContextMenu={onContextMenu}
       className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-cb-surface-hover border-b border-cb-border-light transition-colors ${
         isActive ? 'bg-cb-panel' : ''
       }`}

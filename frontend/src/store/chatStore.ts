@@ -65,6 +65,9 @@ interface ChatState {
   updateMessageStatus: (messageId: string, userId: string, status: string, conversationId: string) => void;
   markConversationRead: (conversationId: string) => void;
   createConversation: (participantIds: string[], name?: string, isGroup?: boolean) => Promise<Conversation>;
+  archiveConversation: (conversationId: string) => Promise<void>;
+  unarchiveConversation: (conversationId: string) => Promise<void>;
+  deleteConversation: (conversationId: string) => Promise<void>;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -226,5 +229,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: [{ ...data, lastMessage: null, unreadCount: 0 }, ...state.conversations],
     }));
     return data;
+  },
+
+  archiveConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/archive`, { archive: true });
+    set((state) => ({
+      conversations: state.conversations.filter((c) => c.id !== conversationId),
+      activeConversationId: state.activeConversationId === conversationId ? null : state.activeConversationId,
+    }));
+  },
+
+  unarchiveConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/archive`, { archive: false });
+    await get().fetchConversations();
+  },
+
+  deleteConversation: async (conversationId) => {
+    await client.delete(`/conversations/${conversationId}`);
+    set((state) => ({
+      conversations: state.conversations.filter((c) => c.id !== conversationId),
+      activeConversationId: state.activeConversationId === conversationId ? null : state.activeConversationId,
+      messages: Object.fromEntries(Object.entries(state.messages).filter(([k]) => k !== conversationId)),
+    }));
   },
 }));

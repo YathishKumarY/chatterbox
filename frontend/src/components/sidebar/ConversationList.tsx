@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { UserAvatar } from '../common/UserAvatar';
 import { ConversationItem } from './ConversationItem';
+import { ConversationContextMenu } from './ConversationContextMenu';
 import { SearchUsers } from './SearchUsers';
 import { CreateGroup } from './CreateGroup';
 import { ContactRequests } from './ContactRequests';
@@ -24,6 +25,7 @@ export function ConversationList() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; x: number; y: number } | null>(null);
 
   useEffect(() => {
     fetchConversations();
@@ -105,10 +107,24 @@ export function ConversationList() {
               isActive={conv.id === activeConversationId}
               currentUserId={user?.id || ''}
               onClick={() => setActiveConversation(conv.id)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenu({ convId: conv.id, isGroup: conv.isGroup, x: e.clientX, y: e.clientY });
+              }}
             />
           ))
         )}
       </div>
+
+      {contextMenu && (
+        <ConversationContextMenu
+          conversationId={contextMenu.convId}
+          isGroup={contextMenu.isGroup}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
 
       <div className="bg-cb-panel px-4 py-2 flex items-center gap-3 border-t border-cb-border">
         {user && <UserAvatar user={user} size="sm" />}

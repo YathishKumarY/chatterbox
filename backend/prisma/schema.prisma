@@ -52,6 +52,7 @@ model ConversationParticipant {
   userId              String    @map("user_id")
   conversationId      String    @map("conversation_id")
   role                String    @default("member")
+  isArchived          Boolean   @default(false) @map("is_archived")
   joinedAt            DateTime  @default(now()) @map("joined_at")
   unreadCount         Int       @default(0) @map("unread_count")
   lastMessageAt       DateTime? @map("last_message_at")

@@ -71,12 +71,13 @@ export async function createConversation(
   });
 }
 
-export async function getUserConversations(userId: string) {
+export async function getUserConversations(userId: string, includeArchived = false) {
   const myParticipants = await prisma.conversationParticipant.findMany({
-    where: { userId },
+    where: { userId, ...(includeArchived ? {} : { isArchived: false }) },
     select: {
       conversationId: true,
       unreadCount: true,
+      isArchived: true,
       lastMessageAt: true,
       lastMessagePreview: true,
       lastMessageSenderId: true,
@@ -99,6 +100,7 @@ export async function getUserConversations(userId: string) {
     return {
       ...conv,
       unreadCount: denorm.unreadCount,
+      isArchived: denorm.isArchived,
       lastMessage: denorm.lastMessageAt
         ? {
             content: denorm.lastMessagePreview || '',
@@ -218,4 +220,39 @@ export async function updateParticipantRole(
     data: { role: newRole },
     include: { user: { select: userSelect } },
   });
+}
+
+export async function archiveConversation(conversationId: string, userId: string, archive: boolean) {
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: { userId_conversationId: { userId, conversationId } },
+  });
+  if (!participant) throw new NotFoundError('Not a member of this conversation');
+
+  return prisma.conversationParticipant.update({
+    where: { userId_conversationId: { userId, conversationId } },
+    data: { isArchived: archive },
+  });
+}
+
+export async function deleteConversation(conversationId: string, userId: string) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+    include: { participants: true },
+  });
+  if (!conversation) throw new NotFoundError('Conversation not found');
+
+  const isMember = conversation.participants.some(p => p.userId === userId);
+  if (!isMember) throw new ForbiddenError('Not a member of this conversation');
+
+  if (conversation.isGroup) {
+    await prisma.conversationParticipant.delete({
+      where: { userId_conversationId: { userId, conversationId } },
+    });
+    const remaining = await prisma.conversationParticipant.count({ where: { conversationId } });
+    if (remaining === 0) {
+      await prisma.conversation.delete({ where: { id: conversationId } });
+    }
+  } else {
+    await prisma.conversation.delete({ where: { id: conversationId } });
+  }
 }
