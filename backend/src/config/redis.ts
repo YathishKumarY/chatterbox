@@ -1,0 +1,35 @@
+import { Redis } from 'ioredis';
+import { env } from './env.js';
+import { logger } from '../utils/logger.js';
+
+let redisClient: Redis | null = null;
+
+export function getRedisClient(): Redis | null {
+  if (!env.REDIS_URL) return null;
+
+  if (!redisClient) {
+    redisClient = new Redis(env.REDIS_URL, {
+      maxRetriesPerRequest: null,
+      retryStrategy(times: number) {
+        return Math.min(times * 200, 5000);
+      },
+    });
+
+    redisClient.on('error', (err: Error) => {
+      logger.error(err, 'Redis connection error');
+    });
+
+    redisClient.on('connect', () => {
+      logger.info('Connected to Redis');
+    });
+  }
+
+  return redisClient;
+}
+
+export async function closeRedis() {
+  if (redisClient) {
+    await redisClient.quit();
+    redisClient = null;
+  }
+}

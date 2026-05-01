@@ -1,0 +1,104 @@
+import { useState, FormEvent, useRef, useEffect, useCallback } from 'react';
+import { useChat } from '../../hooks/useChat';
+import { Send, Smile } from 'lucide-react';
+import EmojiPicker, { Theme, EmojiClickData } from 'emoji-picker-react';
+
+export function MessageInput() {
+  const [content, setContent] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
+  const { sendMessage, emitTyping } = useChat();
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!showPicker) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setShowPicker(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showPicker]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const trimmed = content.trim();
+    if (!trimmed) return;
+    sendMessage(trimmed);
+    setContent('');
+    inputRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+    emitTyping();
+  };
+
+  const onEmojiClick = useCallback((emojiData: EmojiClickData) => {
+    const textarea = inputRef.current;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const newContent = content.slice(0, start) + emojiData.emoji + content.slice(end);
+      setContent(newContent);
+      requestAnimationFrame(() => {
+        const pos = start + emojiData.emoji.length;
+        textarea.selectionStart = pos;
+        textarea.selectionEnd = pos;
+        textarea.focus();
+      });
+    } else {
+      setContent((prev) => prev + emojiData.emoji);
+    }
+    setShowPicker(false);
+  }, [content]);
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-whatsapp-panel px-4 py-3 flex items-end gap-3">
+      <div className="relative" ref={pickerRef}>
+        <button
+          type="button"
+          onClick={() => setShowPicker((v) => !v)}
+          className="p-2 rounded-full hover:bg-gray-200 transition-colors text-gray-600 flex-shrink-0"
+        >
+          <Smile className="w-5 h-5" />
+        </button>
+        {showPicker && (
+          <div className="absolute bottom-full mb-2 left-0 z-50">
+            <EmojiPicker theme={Theme.LIGHT} onEmojiClick={onEmojiClick} />
+          </div>
+        )}
+      </div>
+
+      <textarea
+        ref={inputRef}
+        value={content}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        rows={1}
+        className="flex-1 bg-white rounded-lg px-4 py-2 outline-none resize-none text-sm max-h-32 border border-gray-200 focus:border-whatsapp-teal"
+        placeholder="Type a message"
+        style={{ minHeight: '40px' }}
+      />
+      <button
+        type="submit"
+        disabled={!content.trim()}
+        className="bg-whatsapp-teal text-white p-2 rounded-full hover:bg-whatsapp-dark transition-colors disabled:opacity-50 flex-shrink-0"
+      >
+        <Send className="w-5 h-5" />
+      </button>
+    </form>
+  );
+}
