@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useChatStore } from '../../store/chatStore';
 import { usePresenceStore } from '../../store/presenceStore';
 import { useAuthStore } from '../../store/authStore';
@@ -8,6 +8,7 @@ import { ChatHeader } from './ChatHeader';
 import { MessageBubble } from './MessageBubble';
 import { MessageInput } from './MessageInput';
 import { TypingIndicator } from './TypingIndicator';
+import { GroupInfo } from './GroupInfo';
 import { MessageCircle } from 'lucide-react';
 
 export function ChatWindow() {
@@ -26,6 +27,7 @@ export function ChatWindow() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const prevMessageCount = useRef(0);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
 
   const conversation = conversations.find((c) => c.id === activeConversationId);
   const convMessages = activeConversationId ? messages[activeConversationId] || [] : [];
@@ -34,6 +36,7 @@ export function ChatWindow() {
     if (activeConversationId) {
       fetchMessages(activeConversationId);
       markAsRead(activeConversationId);
+      setShowGroupInfo(false);
     }
   }, [activeConversationId, fetchMessages, markAsRead]);
 
@@ -82,6 +85,18 @@ export function ChatWindow() {
     .map((uid) => conversation.participants.find((p) => p.userId === uid)?.user.username)
     .filter(Boolean) as string[];
 
+  if (showGroupInfo && conversation.isGroup) {
+    return (
+      <GroupInfo
+        name={displayName}
+        participants={conversation.participants as any}
+        createdBy={conversation.createdBy}
+        currentUserId={currentUserId || ''}
+        onClose={() => setShowGroupInfo(false)}
+      />
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col h-full">
       <ChatHeader
@@ -89,6 +104,7 @@ export function ChatWindow() {
         isGroup={conversation.isGroup}
         participants={conversation.participants}
         onBack={() => setActiveConversation(null)}
+        onInfoClick={conversation.isGroup ? () => setShowGroupInfo(true) : undefined}
       />
 
       <div

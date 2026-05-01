@@ -14,9 +14,10 @@ interface Props {
   isGroup: boolean;
   participants: Participant[];
   onBack?: () => void;
+  onInfoClick?: () => void;
 }
 
-export function ChatHeader({ name, isGroup, participants, onBack }: Props) {
+export function ChatHeader({ name, isGroup, participants, onBack, onInfoClick }: Props) {
   const currentUserId = useAuthStore((s) => s.user?.id);
   const activeConversationId = useChatStore((s) => s.activeConversationId);
 
@@ -50,13 +51,18 @@ export function ChatHeader({ name, isGroup, participants, onBack }: Props) {
         </button>
       )}
 
-      <UserAvatar user={isGroup ? { username: name } : (participants.find((p) => p.userId !== currentUserId)?.user || { username: name })} size="sm" />
+      <div
+        className={`flex items-center gap-3 flex-1 min-w-0 ${onInfoClick ? 'cursor-pointer hover:opacity-80' : ''}`}
+        onClick={onInfoClick}
+      >
+        <UserAvatar user={isGroup ? { username: name } : (participants.find((p) => p.userId !== currentUserId)?.user || { username: name })} size="sm" />
 
-      <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-cb-text-primary truncate">{name}</h3>
-        <p className={`text-xs truncate ${typingNames.length > 0 ? 'text-cb-teal' : 'text-cb-text-secondary'}`}>
-          {subtitle}
-        </p>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-medium text-cb-text-primary truncate">{name}</h3>
+          <p className={`text-xs truncate ${typingNames.length > 0 ? 'text-cb-teal' : 'text-cb-text-secondary'}`}>
+            {subtitle}
+          </p>
+        </div>
       </div>
     </div>
   );
