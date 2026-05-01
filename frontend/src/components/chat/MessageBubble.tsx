@@ -2,7 +2,7 @@ import { formatMessageTime } from '../../utils/formatTime';
 import { MessageStatus } from './MessageStatus';
 import { UserAvatar } from '../common/UserAvatar';
 
-const emojiOnlyRegex = /^(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}|️|‍|⃣|[\u{1F1E0}-\u{1F1FF}]){1,8}$/u;
+const emojiOnlyRegex = /^(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Modifier}|️|‍|⃣|[\u{1F1E0}-\u{1F1FF}]){1,8}$/u;
 
 function isEmojiOnly(text: string): boolean {
   return emojiOnlyRegex.test(text.trim());
