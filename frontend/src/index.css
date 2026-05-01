@@ -4,39 +4,39 @@
 
 @layer base {
   :root {
-    --cb-bg: 236 229 221;
-    --cb-chatbg: 229 221 213;
-    --cb-panel: 237 237 237;
-    --cb-light: 220 248 198;
+    --cb-bg: 238 234 245;
+    --cb-chatbg: 229 225 239;
+    --cb-panel: 242 239 247;
+    --cb-light: 224 214 245;
     --cb-surface: 255 255 255;
-    --cb-surface-hover: 249 250 251;
-    --cb-surface-active: 243 244 246;
-    --cb-input-bg: 243 244 246;
-    --cb-border: 229 231 235;
-    --cb-border-light: 243 244 246;
+    --cb-surface-hover: 247 245 251;
+    --cb-surface-active: 239 236 245;
+    --cb-input-bg: 245 243 249;
+    --cb-border: 221 216 232;
+    --cb-border-light: 238 234 245;
     --cb-text-primary: 17 24 39;
     --cb-text-secondary: 107 114 128;
     --cb-text-muted: 156 163 175;
-    --cb-avatar-bg: 209 213 219;
-    --cb-pattern-fill: #c5bfb0;
+    --cb-avatar-bg: 176 168 210;
+    --cb-pattern-fill: #C5BFD6;
   }
 
   .dark {
-    --cb-bg: 17 27 33;
-    --cb-chatbg: 11 20 26;
-    --cb-panel: 32 44 51;
-    --cb-light: 0 92 75;
-    --cb-surface: 31 44 51;
-    --cb-surface-hover: 38 52 60;
-    --cb-surface-active: 44 58 66;
-    --cb-input-bg: 38 52 60;
-    --cb-border: 44 58 66;
-    --cb-border-light: 38 52 60;
-    --cb-text-primary: 233 237 239;
-    --cb-text-secondary: 145 161 171;
-    --cb-text-muted: 107 122 132;
-    --cb-avatar-bg: 54 68 76;
-    --cb-pattern-fill: #182229;
+    --cb-bg: 26 22 37;
+    --cb-chatbg: 19 16 30;
+    --cb-panel: 37 32 54;
+    --cb-light: 61 53 102;
+    --cb-surface: 42 36 64;
+    --cb-surface-hover: 50 44 74;
+    --cb-surface-active: 58 51 84;
+    --cb-input-bg: 50 44 74;
+    --cb-border: 58 51 84;
+    --cb-border-light: 50 44 74;
+    --cb-text-primary: 233 230 242;
+    --cb-text-secondary: 160 153 180;
+    --cb-text-muted: 120 113 145;
+    --cb-avatar-bg: 72 64 108;
+    --cb-pattern-fill: #1E1A2E;
   }
 }
 
@@ -50,18 +50,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #9990b8;
   border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #4A4377;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #7a70a8;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: #635A9D;
 }

@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <path d="M256 36C137 36 40 125 40 234c0 38 12 74 33 105l-29 97 102-28c29 17 63 26 99 26h11c119 0 216-89 216-198S386 36 267 36h-11z" fill="#4AC959"/>
+  <path d="M256 36C137 36 40 125 40 234c0 38 12 74 33 105l-29 97 102-28c29 17 63 26 99 26h11c119 0 216-89 216-198S386 36 267 36h-11z" fill="#635A9D"/>
   <text x="262" y="278" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="175" fill="white">CB</text>
 </svg>
