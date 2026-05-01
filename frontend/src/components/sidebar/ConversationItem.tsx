@@ -1,6 +1,7 @@
 import { formatTime } from '../../utils/formatTime';
 import { usePresenceStore } from '../../store/presenceStore';
 import { UserAvatar } from '../common/UserAvatar';
+import { Pin, Star } from 'lucide-react';
 
 interface Conversation {
   id: string;
@@ -13,6 +14,9 @@ interface Conversation {
   }[];
   lastMessage: { content: string; createdAt: string; senderId: string | null } | null;
   unreadCount: number;
+  isPinned?: boolean;
+  isFavourite?: boolean;
+  isMarkedUnread?: boolean;
 }
 
 interface Props {
@@ -57,7 +61,11 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <span className="font-medium text-cb-text-primary truncate">{displayName}</span>
+          <span className="font-medium text-cb-text-primary truncate flex items-center gap-1">
+            {displayName}
+            {conversation.isPinned && <Pin className="w-3 h-3 text-cb-text-muted flex-shrink-0" />}
+            {conversation.isFavourite && <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 flex-shrink-0" />}
+          </span>
           {lastMessage && (
             <span className="text-xs text-cb-text-secondary flex-shrink-0">{formatTime(lastMessage.createdAt)}</span>
           )}
@@ -68,9 +76,9 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
               ? `${conversation.isGroup && senderName ? `${senderName}: ` : ''}${lastMessage.content}`
               : 'No messages yet'}
           </p>
-          {conversation.unreadCount > 0 && (
+          {(conversation.unreadCount > 0 || conversation.isMarkedUnread) && (
             <span className="bg-cb-green text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 ml-2">
-              {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
+              {conversation.unreadCount > 0 ? (conversation.unreadCount > 99 ? '99+' : conversation.unreadCount) : ''}
             </span>
           )}
         </div>

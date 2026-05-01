@@ -154,7 +154,7 @@ export async function markConversationAsRead(conversationId: string, userId: str
     }),
     prisma.conversationParticipant.updateMany({
       where: { conversationId, userId },
-      data: { unreadCount: 0 },
+      data: { unreadCount: 0, isMarkedUnread: false },
     }),
   ]);
 }

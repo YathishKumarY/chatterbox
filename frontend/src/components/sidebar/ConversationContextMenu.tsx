@@ -1,19 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { useChatStore } from '../../store/chatStore';
-import { Archive, ArchiveRestore, Trash2 } from 'lucide-react';
+import { Archive, ArchiveRestore, Trash2, Pin, PinOff, Star, StarOff, Eye } from 'lucide-react';
 
 interface Props {
   conversationId: string;
   isGroup: boolean;
   isArchived: boolean;
+  isPinned: boolean;
+  isFavourite: boolean;
   x: number;
   y: number;
   onClose: () => void;
 }
 
-export function ConversationContextMenu({ conversationId, isGroup, isArchived, x, y, onClose }: Props) {
+export function ConversationContextMenu({ conversationId, isGroup, isArchived, isPinned, isFavourite, x, y, onClose }: Props) {
   const archiveConversation = useChatStore((s) => s.archiveConversation);
   const unarchiveConversation = useChatStore((s) => s.unarchiveConversation);
+  const pinConversation = useChatStore((s) => s.pinConversation);
+  const unpinConversation = useChatStore((s) => s.unpinConversation);
+  const favouriteConversation = useChatStore((s) => s.favouriteConversation);
+  const unfavouriteConversation = useChatStore((s) => s.unfavouriteConversation);
+  const markAsUnread = useChatStore((s) => s.markAsUnread);
   const deleteConversation = useChatStore((s) => s.deleteConversation);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -49,6 +56,29 @@ export function ConversationContextMenu({ conversationId, isGroup, isArchived, x
     onClose();
   };
 
+  const handlePinToggle = async () => {
+    if (isPinned) {
+      await unpinConversation(conversationId);
+    } else {
+      await pinConversation(conversationId);
+    }
+    onClose();
+  };
+
+  const handleFavouriteToggle = async () => {
+    if (isFavourite) {
+      await unfavouriteConversation(conversationId);
+    } else {
+      await favouriteConversation(conversationId);
+    }
+    onClose();
+  };
+
+  const handleMarkUnread = async () => {
+    await markAsUnread(conversationId);
+    onClose();
+  };
+
   const handleDelete = async () => {
     if (!confirmDelete) {
       setConfirmDelete(true);
@@ -60,6 +90,33 @@ export function ConversationContextMenu({ conversationId, isGroup, isArchived, x
 
   return (
     <div ref={ref} style={menuStyle} className="bg-cb-surface border border-cb-border rounded-lg shadow-xl overflow-hidden min-w-[180px]">
+      <button
+        onClick={handlePinToggle}
+        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-cb-text-primary hover:bg-cb-surface-hover transition-colors"
+      >
+        {isPinned
+          ? <PinOff className="w-4 h-4 text-cb-text-secondary" />
+          : <Pin className="w-4 h-4 text-cb-text-secondary" />
+        }
+        {isPinned ? 'Unpin chat' : 'Pin chat'}
+      </button>
+      <button
+        onClick={handleMarkUnread}
+        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-cb-text-primary hover:bg-cb-surface-hover transition-colors"
+      >
+        <Eye className="w-4 h-4 text-cb-text-secondary" />
+        Mark as unread
+      </button>
+      <button
+        onClick={handleFavouriteToggle}
+        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-cb-text-primary hover:bg-cb-surface-hover transition-colors"
+      >
+        {isFavourite
+          ? <StarOff className="w-4 h-4 text-cb-text-secondary" />
+          : <Star className="w-4 h-4 text-cb-text-secondary" />
+        }
+        {isFavourite ? 'Remove from favourites' : 'Add to favourites'}
+      </button>
       <button
         onClick={handleArchiveToggle}
         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-cb-text-primary hover:bg-cb-surface-hover transition-colors"

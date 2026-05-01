@@ -114,6 +114,36 @@ router.post('/:id/archive', async (req: Request<{ id: string }>, res: Response, 
   }
 });
 
+router.post('/:id/pin', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { pin } = req.body;
+    await conversationService.pinConversation(req.params.id, req.user!.userId, pin !== false);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/:id/favourite', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { favourite } = req.body;
+    await conversationService.favouriteConversation(req.params.id, req.user!.userId, favourite !== false);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/:id/mark-unread', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { unread } = req.body;
+    await conversationService.markConversationUnread(req.params.id, req.user!.userId, unread !== false);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
   try {
     await conversationService.deleteConversation(req.params.id, req.user!.userId);

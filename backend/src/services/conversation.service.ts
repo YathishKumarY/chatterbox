@@ -78,6 +78,9 @@ export async function getUserConversations(userId: string, includeArchived = fal
       conversationId: true,
       unreadCount: true,
       isArchived: true,
+      isPinned: true,
+      isFavourite: true,
+      isMarkedUnread: true,
       lastMessageAt: true,
       lastMessagePreview: true,
       lastMessageSenderId: true,
@@ -101,6 +104,9 @@ export async function getUserConversations(userId: string, includeArchived = fal
       ...conv,
       unreadCount: denorm.unreadCount,
       isArchived: denorm.isArchived,
+      isPinned: denorm.isPinned,
+      isFavourite: denorm.isFavourite,
+      isMarkedUnread: denorm.isMarkedUnread,
       lastMessage: denorm.lastMessageAt
         ? {
             content: denorm.lastMessagePreview || '',
@@ -231,6 +237,42 @@ export async function archiveConversation(conversationId: string, userId: string
   return prisma.conversationParticipant.update({
     where: { userId_conversationId: { userId, conversationId } },
     data: { isArchived: archive },
+  });
+}
+
+export async function pinConversation(conversationId: string, userId: string, pin: boolean) {
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: { userId_conversationId: { userId, conversationId } },
+  });
+  if (!participant) throw new NotFoundError('Not a member of this conversation');
+
+  return prisma.conversationParticipant.update({
+    where: { userId_conversationId: { userId, conversationId } },
+    data: { isPinned: pin },
+  });
+}
+
+export async function favouriteConversation(conversationId: string, userId: string, favourite: boolean) {
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: { userId_conversationId: { userId, conversationId } },
+  });
+  if (!participant) throw new NotFoundError('Not a member of this conversation');
+
+  return prisma.conversationParticipant.update({
+    where: { userId_conversationId: { userId, conversationId } },
+    data: { isFavourite: favourite },
+  });
+}
+
+export async function markConversationUnread(conversationId: string, userId: string, unread: boolean) {
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: { userId_conversationId: { userId, conversationId } },
+  });
+  if (!participant) throw new NotFoundError('Not a member of this conversation');
+
+  return prisma.conversationParticipant.update({
+    where: { userId_conversationId: { userId, conversationId } },
+    data: { isMarkedUnread: unread },
   });
 }
 

@@ -4,6 +4,7 @@ import { usePresenceStore } from '../../store/presenceStore';
 import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useChat } from '../../hooks/useChat';
+import { getSenderColor } from '../../utils/senderColors';
 import { ChatHeader } from './ChatHeader';
 import { MessageBubble } from './MessageBubble';
 import { MessageInput } from './MessageInput';
@@ -130,6 +131,8 @@ export function ChatWindow() {
             createdAt={msg.createdAt}
             isSender={msg.senderId === currentUserId}
             senderName={msg.sender.username}
+            senderColor={getSenderColor(msg.senderId)}
+            senderAvatar={msg.senderId !== currentUserId ? { username: msg.sender.username, avatarUrl: msg.sender.avatarUrl } : undefined}
             isGroup={conversation.isGroup}
             statuses={msg.statuses}
             pending={msg.pending}

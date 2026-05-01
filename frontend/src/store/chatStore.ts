@@ -46,6 +46,9 @@ interface Conversation {
   lastMessage: { content: string; createdAt: string; senderId: string | null } | null;
   unreadCount: number;
   isArchived?: boolean;
+  isPinned?: boolean;
+  isFavourite?: boolean;
+  isMarkedUnread?: boolean;
 }
 
 interface ChatState {
@@ -71,6 +74,11 @@ interface ChatState {
   createConversation: (participantIds: string[], name?: string, isGroup?: boolean) => Promise<Conversation>;
   archiveConversation: (conversationId: string) => Promise<void>;
   unarchiveConversation: (conversationId: string) => Promise<void>;
+  pinConversation: (conversationId: string) => Promise<void>;
+  unpinConversation: (conversationId: string) => Promise<void>;
+  favouriteConversation: (conversationId: string) => Promise<void>;
+  unfavouriteConversation: (conversationId: string) => Promise<void>;
+  markAsUnread: (conversationId: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
 }
 
@@ -151,6 +159,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       );
 
       conversations.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
         const aTime = a.lastMessage?.createdAt || a.updatedAt || '';
         const bTime = b.lastMessage?.createdAt || b.updatedAt || '';
         return bTime.localeCompare(aTime);
@@ -233,7 +243,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   markConversationRead: (conversationId) => {
     set((state) => ({
       conversations: state.conversations.map((c) =>
-        c.id === conversationId ? { ...c, unreadCount: 0 } : c,
+        c.id === conversationId ? { ...c, unreadCount: 0, isMarkedUnread: false } : c,
       ),
     }));
   },
@@ -267,6 +277,51 @@ export const useChatStore = create<ChatState>((set, get) => ({
       archivedConversations: state.archivedConversations.filter((c) => c.id !== conversationId),
     }));
     await get().fetchConversations();
+  },
+
+  pinConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/pin`, { pin: true });
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === conversationId ? { ...c, isPinned: true } : c,
+      ),
+    }));
+  },
+
+  unpinConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/pin`, { pin: false });
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === conversationId ? { ...c, isPinned: false } : c,
+      ),
+    }));
+  },
+
+  favouriteConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/favourite`, { favourite: true });
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === conversationId ? { ...c, isFavourite: true } : c,
+      ),
+    }));
+  },
+
+  unfavouriteConversation: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/favourite`, { favourite: false });
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === conversationId ? { ...c, isFavourite: false } : c,
+      ),
+    }));
+  },
+
+  markAsUnread: async (conversationId) => {
+    await client.post(`/conversations/${conversationId}/mark-unread`, { unread: true });
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === conversationId ? { ...c, isMarkedUnread: true } : c,
+      ),
+    }));
   },
 
   deleteConversation: async (conversationId) => {

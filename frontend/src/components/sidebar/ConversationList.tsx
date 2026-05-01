@@ -29,7 +29,7 @@ export function ConversationList() {
   const [showRequests, setShowRequests] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
-  const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; isArchived: boolean; x: number; y: number } | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; isArchived: boolean; isPinned: boolean; isFavourite: boolean; x: number; y: number } | null>(null);
 
   useEffect(() => {
     fetchConversations();
@@ -56,6 +56,16 @@ export function ConversationList() {
   }), [closeAll, showSearch, showCreateGroup, showRequests, showSettings, showArchived]);
 
   useKeyboardShortcuts(shortcuts);
+
+  const sortedConversations = useMemo(() => {
+    return [...conversations].sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      const aTime = a.lastMessage?.createdAt || a.updatedAt || '';
+      const bTime = b.lastMessage?.createdAt || b.updatedAt || '';
+      return bTime.localeCompare(aTime);
+    });
+  }, [conversations]);
 
   return (
     <div className="flex flex-col h-full bg-cb-surface relative">
@@ -112,7 +122,7 @@ export function ConversationList() {
             <p className="text-center">No conversations yet. Search for users to start chatting!</p>
           </div>
         ) : (
-          conversations.map((conv) => (
+          sortedConversations.map((conv) => (
             <ConversationItem
               key={conv.id}
               conversation={conv}
@@ -121,7 +131,7 @@ export function ConversationList() {
               onClick={() => setActiveConversation(conv.id)}
               onContextMenu={(e) => {
                 e.preventDefault();
-                setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: false, x: e.clientX, y: e.clientY });
+                setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: false, isPinned: conv.isPinned || false, isFavourite: conv.isFavourite || false, x: e.clientX, y: e.clientY });
               }}
             />
           ))
@@ -133,6 +143,8 @@ export function ConversationList() {
           conversationId={contextMenu.convId}
           isGroup={contextMenu.isGroup}
           isArchived={contextMenu.isArchived}
+          isPinned={contextMenu.isPinned}
+          isFavourite={contextMenu.isFavourite}
           x={contextMenu.x}
           y={contextMenu.y}
           onClose={() => setContextMenu(null)}
@@ -182,7 +194,7 @@ export function ConversationList() {
                   onClick={() => { setActiveConversation(conv.id); setShowArchived(false); }}
                   onContextMenu={(e) => {
                     e.preventDefault();
-                    setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: true, x: e.clientX, y: e.clientY });
+                    setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: true, isPinned: conv.isPinned || false, isFavourite: conv.isFavourite || false, x: e.clientX, y: e.clientY });
                   }}
                 />
               ))
