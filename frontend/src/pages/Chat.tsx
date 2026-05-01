@@ -18,14 +18,14 @@ export function Chat() {
 
   if (!user) {
     return (
-      <div className="h-full bg-cb-bg flex items-center justify-center">
+      <div className="fixed inset-0 bg-cb-bg flex items-center justify-center">
         <div className="text-cb-teal text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="fixed inset-0 flex flex-col">
       <NotificationPrompt />
       <AppLayout />
     </div>
