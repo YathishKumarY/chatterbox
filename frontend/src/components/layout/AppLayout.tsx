@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { ConversationList } from '../sidebar/ConversationList';
 import { ChatWindow } from '../chat/ChatWindow';
 import { useChatStore } from '../../store/chatStore';
@@ -6,11 +6,29 @@ import { useChatStore } from '../../store/chatStore';
 const MIN_WIDTH = 280;
 const MAX_WIDTH = 600;
 const DEFAULT_WIDTH = 400;
+const MD_BREAKPOINT = 768;
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < MD_BREAKPOINT : false,
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MD_BREAKPOINT - 1}px)`);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    setIsMobile(mq.matches);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  return isMobile;
+}
 
 export function AppLayout() {
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_WIDTH);
   const isDragging = useRef(false);
+  const isMobile = useIsMobile();
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,12 +57,12 @@ export function AppLayout() {
   }, [sidebarWidth]);
 
   return (
-    <div className="flex h-screen bg-cb-bg">
+    <div className="flex h-screen bg-cb-bg overflow-hidden">
       <div
         className={`border-r border-gray-200 ${
           activeConversationId ? 'hidden md:flex md:flex-col' : 'flex flex-col w-full md:w-auto'
         }`}
-        style={{ width: sidebarWidth, minWidth: MIN_WIDTH, maxWidth: MAX_WIDTH }}
+        style={isMobile ? undefined : { width: sidebarWidth, minWidth: MIN_WIDTH, maxWidth: MAX_WIDTH }}
       >
         <ConversationList />
       </div>

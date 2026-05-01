@@ -76,7 +76,7 @@ export function MessageInput() {
           <Smile className="w-5 h-5" />
         </button>
         {showPicker && (
-          <div className="absolute bottom-full mb-2 left-0 z-50">
+          <div className="absolute bottom-full mb-2 left-0 z-50 max-w-[calc(100vw-2rem)]">
             <EmojiPicker theme={Theme.LIGHT} onEmojiClick={onEmojiClick} />
           </div>
         )}
