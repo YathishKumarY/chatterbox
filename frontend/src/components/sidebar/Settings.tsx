@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '../../store/themeStore';
 import { UserAvatar } from '../common/UserAvatar';
+import { ImageCropModal } from '../common/ImageCropModal';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import {
   X, Camera, Pencil, Check, Keyboard, HelpCircle, Mail, Shield, LogOut,
@@ -19,6 +20,7 @@ export function Settings({ onClose }: { onClose: () => void }) {
   const [saving, setSaving] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [cropImage, setCropImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveName = async () => {
@@ -36,27 +38,18 @@ export function Settings({ onClose }: { onClose: () => void }) {
     setSaving(false);
   };
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-
-    img.onload = async () => {
-      const size = 200;
-      canvas.width = size;
-      canvas.height = size;
-      const scale = Math.max(size / img.width, size / img.height);
-      const x = (size - img.width * scale) / 2;
-      const y = (size - img.height * scale) / 2;
-      ctx!.drawImage(img, x, y, img.width * scale, img.height * scale);
-      const base64 = canvas.toDataURL('image/jpeg', 0.8);
-      await updateProfile({ avatarData: base64 });
-    };
-    img.src = URL.createObjectURL(file);
+    const reader = new FileReader();
+    reader.onload = () => setCropImage(reader.result as string);
+    reader.readAsDataURL(file);
     e.target.value = '';
+  };
+
+  const handleCropSave = async (croppedBase64: string) => {
+    await updateProfile({ avatarData: croppedBase64 });
+    setCropImage(null);
   };
 
   if (!user) return null;
@@ -86,7 +79,7 @@ export function Settings({ onClose }: { onClose: () => void }) {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handlePhotoUpload}
+              onChange={handleFileSelect}
             />
           </div>
 
@@ -192,6 +185,14 @@ export function Settings({ onClose }: { onClose: () => void }) {
           </div>
         </div>
       </div>
+
+      {cropImage && (
+        <ImageCropModal
+          imageSrc={cropImage}
+          onCropComplete={handleCropSave}
+          onClose={() => setCropImage(null)}
+        />
+      )}
     </div>
   );
 }
