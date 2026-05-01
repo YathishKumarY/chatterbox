@@ -6,7 +6,7 @@ export function Login() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen bg-cb-bg flex items-center justify-center p-4">
+    <div className="h-full bg-cb-bg flex items-center justify-center p-4">
       <div className="bg-cb-surface rounded-2xl shadow-xl w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-2 mb-6">
           <img src="/favicon.svg" alt="ChatterBox" className="w-10 h-10" />

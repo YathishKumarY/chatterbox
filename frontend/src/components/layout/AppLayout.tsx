@@ -57,7 +57,7 @@ export function AppLayout() {
   }, [sidebarWidth]);
 
   return (
-    <div className="flex h-screen bg-cb-bg overflow-hidden">
+    <div className="flex h-full bg-cb-bg overflow-hidden">
       <div
         className={`border-r border-cb-border ${
           activeConversationId ? 'hidden md:flex md:flex-col' : 'flex flex-col w-full md:w-auto'
