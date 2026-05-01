@@ -17,8 +17,8 @@ router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
 
 router.patch('/me', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, avatarUrl } = req.body;
-    const user = await userService.updateUser(req.user!.userId, { username, avatarUrl });
+    const { username, avatarUrl, avatarData } = req.body;
+    const user = await userService.updateUser(req.user!.userId, { username, avatarUrl, avatarData });
     res.json(user);
   } catch (err) {
     next(err);

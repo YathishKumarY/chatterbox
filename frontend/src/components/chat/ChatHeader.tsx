@@ -1,7 +1,8 @@
 import { usePresenceStore } from '../../store/presenceStore';
 import { useAuthStore } from '../../store/authStore';
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useChatStore } from '../../store/chatStore';
+import { UserAvatar } from '../common/UserAvatar';
 
 interface Participant {
   userId: string;
@@ -49,9 +50,7 @@ export function ChatHeader({ name, isGroup, participants, onBack }: Props) {
         </button>
       )}
 
-      <div className="w-10 h-10 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold">
-        {isGroup ? <Users className="w-5 h-5" /> : name.charAt(0).toUpperCase()}
-      </div>
+      <UserAvatar user={isGroup ? { username: name } : (participants.find((p) => p.userId !== currentUserId)?.user || { username: name })} size="sm" />
 
       <div className="flex-1 min-w-0">
         <h3 className="font-medium text-cb-text-primary truncate">{name}</h3>

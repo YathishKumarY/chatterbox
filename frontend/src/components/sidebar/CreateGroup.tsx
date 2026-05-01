@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useChatStore } from '../../store/chatStore';
 import { useContactStore } from '../../store/contactStore';
 import { X, Search, Check } from 'lucide-react';
+import { UserAvatar } from '../common/UserAvatar';
 
 interface ContactUser {
   id: string;
@@ -98,9 +99,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
                     onClick={() => toggleUser(user)}
                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-cb-surface-hover"
                   >
-                    <div className="w-8 h-8 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white text-sm font-bold">
-                      {user.username.charAt(0).toUpperCase()}
-                    </div>
+                    <UserAvatar user={user} size="xs" />
                     <span className="text-sm flex-1 text-left text-cb-text-primary">{user.username}</span>
                     {isSelected && <Check className="w-4 h-4 text-cb-teal" />}
                   </button>

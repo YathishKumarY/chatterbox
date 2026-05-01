@@ -5,7 +5,7 @@ import { getContactStatusMap } from './contact.service.js';
 export async function getUserById(id: string) {
   const user = await prisma.user.findUnique({
     where: { id },
-    select: { id: true, email: true, username: true, avatarUrl: true, isOnline: true, lastSeen: true, createdAt: true },
+    select: { id: true, email: true, username: true, avatarUrl: true, avatarData: true, isOnline: true, lastSeen: true, createdAt: true },
   });
   if (!user) throw new NotFoundError('User not found');
   return user;
@@ -32,11 +32,11 @@ export async function searchUsers(query: string, currentUserId: string) {
   return users.map(u => ({ ...u, contactStatus: statusMap.get(u.id) ?? null }));
 }
 
-export async function updateUser(id: string, data: { username?: string; avatarUrl?: string }) {
+export async function updateUser(id: string, data: { username?: string; avatarUrl?: string; avatarData?: string | null }) {
   return prisma.user.update({
     where: { id },
     data,
-    select: { id: true, email: true, username: true, avatarUrl: true },
+    select: { id: true, email: true, username: true, avatarUrl: true, avatarData: true },
   });
 }
 

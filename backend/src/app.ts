@@ -33,7 +33,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/users', express.json({ limit: '2mb' }), userRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/conversations', messageRoutes);
 app.use('/api/push', pushRoutes);

@@ -14,6 +14,7 @@ model User {
   username     String   @unique
   passwordHash String?  @map("password_hash")
   avatarUrl    String?  @map("avatar_url")
+  avatarData   String?  @map("avatar_data")
   provider     String   @default("local")
   providerId   String?  @map("provider_id")
   isOnline     Boolean  @default(false) @map("is_online")

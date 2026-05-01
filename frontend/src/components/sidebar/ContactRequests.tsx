@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useContactStore } from '../../store/contactStore';
 import { X, UserCheck, UserX } from 'lucide-react';
+import { UserAvatar } from '../common/UserAvatar';
 
 export function ContactRequests({ onClose }: { onClose: () => void }) {
   const incomingRequests = useContactStore((s) => s.incomingRequests);
@@ -31,9 +32,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
               key={req.id}
               className="flex items-center gap-3 px-4 py-3 hover:bg-cb-surface-hover transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold shrink-0">
-                {req.requester.username.charAt(0).toUpperCase()}
-              </div>
+              <UserAvatar user={req.requester} size="sm" />
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-cb-text-primary text-sm">{req.requester.username}</div>
                 <div className="text-xs text-cb-text-secondary truncate">{req.requester.email}</div>

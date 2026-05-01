@@ -3,6 +3,7 @@ import client from '../../api/client';
 import { useChatStore } from '../../store/chatStore';
 import { useContactStore } from '../../store/contactStore';
 import { X, Search, UserPlus, Check, Clock } from 'lucide-react';
+import { UserAvatar } from '../common/UserAvatar';
 
 interface SearchResult {
   id: string;
@@ -85,9 +86,7 @@ export function SearchUsers({ onClose }: { onClose: () => void }) {
               key={user.id}
               className="w-full flex items-center gap-3 px-4 py-2 hover:bg-cb-surface-hover transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold shrink-0">
-                {user.username.charAt(0).toUpperCase()}
-              </div>
+              <UserAvatar user={user} size="sm" />
               <div className="text-left flex-1 min-w-0">
                 <div className="font-medium text-cb-text-primary text-sm">{user.username}</div>
                 <div className="text-xs text-cb-text-secondary truncate">{user.email}</div>

@@ -1,5 +1,6 @@
 import { formatTime } from '../../utils/formatTime';
 import { usePresenceStore } from '../../store/presenceStore';
+import { UserAvatar } from '../common/UserAvatar';
 
 interface Conversation {
   id: string;
@@ -34,6 +35,10 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
     ? conversation.participants.find((p) => p.userId === lastMessage.senderId)?.user.username
     : undefined;
 
+  const avatarUser = conversation.isGroup
+    ? { username: displayName }
+    : otherParticipant?.user || { username: displayName };
+
   return (
     <div
       onClick={onClick}
@@ -42,9 +47,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
       }`}
     >
       <div className="relative flex-shrink-0">
-        <div className="w-12 h-12 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold text-lg">
-          {displayName.charAt(0).toUpperCase()}
-        </div>
+        <UserAvatar user={avatarUser} size="md" />
         {online && (
           <div className="absolute bottom-0 right-0 w-3 h-3 bg-cb-green rounded-full border-2 border-cb-surface" />
         )}

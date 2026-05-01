@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useChatStore } from '../../store/chatStore';
 import { useContactStore } from '../../store/contactStore';
-import { useThemeStore } from '../../store/themeStore';
+import { useAuthStore } from '../../store/authStore';
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
+import { UserAvatar } from '../common/UserAvatar';
 import { ConversationItem } from './ConversationItem';
 import { SearchUsers } from './SearchUsers';
 import { CreateGroup } from './CreateGroup';
 import { ContactRequests } from './ContactRequests';
-import { useState } from 'react';
-import { useAuthStore } from '../../store/authStore';
-import { LogOut, Users, Search, MessageCircle, UserPlus, Sun, Moon } from 'lucide-react';
+import { Settings } from './Settings';
+import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon } from 'lucide-react';
 
 export function ConversationList() {
   const conversations = useChatStore((s) => s.conversations);
@@ -16,43 +17,49 @@ export function ConversationList() {
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const fetchConversations = useChatStore((s) => s.fetchConversations);
   const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
   const incomingRequests = useContactStore((s) => s.incomingRequests);
   const fetchIncomingRequests = useContactStore((s) => s.fetchIncomingRequests);
-  const { theme, toggleTheme } = useThemeStore();
 
   const [showSearch, setShowSearch] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     fetchConversations();
     fetchIncomingRequests();
   }, [fetchConversations, fetchIncomingRequests]);
 
+  const closeAll = useCallback(() => {
+    setShowSearch(false);
+    setShowCreateGroup(false);
+    setShowRequests(false);
+    setShowSettings(false);
+  }, []);
+
+  const shortcuts = useMemo(() => ({
+    onSearch: () => { closeAll(); setShowSearch(true); },
+    onCreateGroup: () => { closeAll(); setShowCreateGroup(true); },
+    onSettings: () => { closeAll(); setShowSettings(true); },
+    onEscape: () => {
+      if (showSearch || showCreateGroup || showRequests || showSettings) {
+        closeAll();
+      }
+    },
+  }), [closeAll, showSearch, showCreateGroup, showRequests, showSettings]);
+
+  useKeyboardShortcuts(shortcuts);
+
   return (
-    <div className="flex flex-col h-full bg-cb-surface">
-      <div className="bg-cb-panel px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 min-w-0 flex-shrink">
-          <div className="w-10 h-10 rounded-full bg-cb-teal flex items-center justify-center text-white font-bold flex-shrink-0">
-            {user?.username?.charAt(0).toUpperCase()}
-          </div>
-          <span className="font-medium text-cb-text-secondary truncate">{user?.username}</span>
+    <div className="flex flex-col h-full bg-cb-surface relative">
+      <div className="bg-cb-panel px-4 py-3 flex items-center justify-between border-b border-cb-border">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="w-6 h-6 text-cb-teal" />
+          <span className="font-bold text-cb-text-primary text-lg">ChatterBox</span>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-5 h-5 text-cb-text-secondary" />
-            ) : (
-              <Moon className="w-5 h-5 text-cb-text-secondary" />
-            )}
-          </button>
-          <button
-            onClick={() => { setShowRequests(!showRequests); setShowSearch(false); setShowCreateGroup(false); }}
+            onClick={() => { closeAll(); setShowRequests(!showRequests); }}
             className="p-2 rounded-full hover:bg-cb-surface-active transition-colors relative"
             title="Contact requests"
           >
@@ -64,25 +71,18 @@ export function ConversationList() {
             )}
           </button>
           <button
-            onClick={() => { setShowCreateGroup(true); setShowSearch(false); setShowRequests(false); }}
+            onClick={() => { closeAll(); setShowCreateGroup(true); }}
             className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
-            title="Create group"
+            title="Create group (Ctrl+Shift+N)"
           >
             <Users className="w-5 h-5 text-cb-text-secondary" />
           </button>
           <button
-            onClick={() => { setShowSearch(!showSearch); setShowCreateGroup(false); setShowRequests(false); }}
+            onClick={() => { closeAll(); setShowSearch(!showSearch); }}
             className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
-            title="Search users"
+            title="Search users (Ctrl+N)"
           >
             <Search className="w-5 h-5 text-cb-text-secondary" />
-          </button>
-          <button
-            onClick={logout}
-            className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5 text-cb-text-secondary" />
           </button>
         </div>
       </div>
@@ -109,6 +109,20 @@ export function ConversationList() {
           ))
         )}
       </div>
+
+      <div className="bg-cb-panel px-4 py-2 flex items-center gap-3 border-t border-cb-border">
+        {user && <UserAvatar user={user} size="sm" />}
+        <span className="flex-1 text-sm font-medium text-cb-text-primary truncate">{user?.username}</span>
+        <button
+          onClick={() => { closeAll(); setShowSettings(!showSettings); }}
+          className="p-2 rounded-full hover:bg-cb-surface-active transition-colors"
+          title="Settings (Ctrl+,)"
+        >
+          <SettingsIcon className="w-5 h-5 text-cb-text-secondary" />
+        </button>
+      </div>
+
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

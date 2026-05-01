@@ -6,6 +6,7 @@ interface User {
   email: string;
   username: string;
   avatarUrl: string | null;
+  avatarData?: string | null;
 }
 
 interface AuthState {
@@ -19,6 +20,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, username: string, password: string) => Promise<void>;
   fetchUser: () => Promise<void>;
+  updateProfile: (data: { username?: string; avatarData?: string | null }) => Promise<void>;
   logout: () => void;
   handleOAuthCallback: (accessToken: string, refreshToken: string) => Promise<void>;
 }
@@ -67,6 +69,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch {
       get().logout();
     }
+  },
+
+  updateProfile: async (data) => {
+    const { data: updated } = await client.patch('/users/me', data);
+    set({ user: { ...get().user!, ...updated } });
   },
 
   logout: () => {
