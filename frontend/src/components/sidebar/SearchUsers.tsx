@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import client from '../../api/client';
 import { useChatStore } from '../../store/chatStore';
 import { useContactStore } from '../../store/contactStore';
-import { X, Search, UserPlus, Check, Clock } from 'lucide-react';
+import { UserPlus, Check, Clock } from 'lucide-react';
 import { UserAvatar } from '../common/UserAvatar';
 
 interface SearchResult {
@@ -14,30 +14,33 @@ interface SearchResult {
   contactStatus: 'contact' | 'pending_outgoing' | 'pending_incoming' | null;
 }
 
-export function SearchUsers({ onClose }: { onClose: () => void }) {
-  const [query, setQuery] = useState('');
+export function SearchUsers({ onClose, query }: { onClose: () => void; query: string; onQueryChange: (q: string) => void }) {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [sendingTo, setSendingTo] = useState<Set<string>>(new Set());
   const createConversation = useChatStore((s) => s.createConversation);
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const sendRequest = useContactStore((s) => s.sendRequest);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const handleSearch = async (q: string) => {
-    setQuery(q);
-    if (q.length < 2) {
+  useEffect(() => {
+    if (query.length < 2) {
       setResults([]);
       return;
     }
-    setIsSearching(true);
-    try {
-      const { data } = await client.get(`/users/search?q=${encodeURIComponent(q)}`);
-      setResults(data);
-    } catch {
-      setResults([]);
-    }
-    setIsSearching(false);
-  };
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const { data } = await client.get(`/users/search?q=${encodeURIComponent(query)}`);
+        setResults(data);
+      } catch {
+        setResults([]);
+      }
+      setIsSearching(false);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [query]);
 
   const startChat = async (userId: string) => {
     const conversation = await createConversation([userId]);
@@ -60,23 +63,6 @@ export function SearchUsers({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="border-b border-cb-border bg-cb-surface">
-      <div className="flex items-center gap-2 p-3">
-        <div className="flex-1 flex items-center gap-2 bg-cb-input-bg rounded-lg px-3 py-2">
-          <Search className="w-4 h-4 text-cb-text-muted" />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="flex-1 bg-transparent outline-none text-sm text-cb-text-primary placeholder:text-cb-text-muted"
-            placeholder="Search users by name or email..."
-            autoFocus
-          />
-        </div>
-        <button onClick={onClose} className="p-1 rounded-full hover:bg-cb-surface-active">
-          <X className="w-5 h-5 text-cb-text-secondary" />
-        </button>
-      </div>
-
       {isSearching && <div className="px-4 py-2 text-sm text-cb-text-secondary">Searching...</div>}
 
       {results.length > 0 && (

@@ -10,7 +10,7 @@ import { SearchUsers } from './SearchUsers';
 import { CreateGroup } from './CreateGroup';
 import { ContactRequests } from './ContactRequests';
 import { Settings } from './Settings';
-import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon, Archive, ArrowLeft } from 'lucide-react';
+import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon, Archive, ArrowLeft, X } from 'lucide-react';
 
 export function ConversationList() {
   const conversations = useChatStore((s) => s.conversations);
@@ -25,6 +25,7 @@ export function ConversationList() {
   const fetchIncomingRequests = useContactStore((s) => s.fetchIncomingRequests);
 
   const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -38,6 +39,7 @@ export function ConversationList() {
 
   const closeAll = useCallback(() => {
     setShowSearch(false);
+    setSearchQuery('');
     setShowCreateGroup(false);
     setShowRequests(false);
     setShowSettings(false);
@@ -104,18 +106,27 @@ export function ConversationList() {
         </div>
       </div>
 
-      <div
-        className="px-3 py-2 border-b border-cb-border bg-cb-panel cursor-text"
-        onClick={() => { closeAll(); setShowSearch(true); }}
-      >
+      <div className="px-3 py-2 border-b border-cb-border bg-cb-panel">
         <div className="flex items-center gap-2 bg-cb-input-bg rounded-lg px-3 py-1.5">
           <Search className="w-4 h-4 text-cb-text-muted flex-shrink-0" />
-          <span className="text-sm text-cb-text-muted">Search users</span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); if (!showSearch) setShowSearch(true); }}
+            onFocus={() => { if (!showSearch) { closeAll(); setShowSearch(true); } }}
+            className="flex-1 bg-transparent outline-none text-sm text-cb-text-primary placeholder:text-cb-text-muted"
+            placeholder="Search users"
+          />
+          {showSearch && (
+            <button onClick={closeAll} className="p-0.5 rounded-full hover:bg-cb-surface-active">
+              <X className="w-4 h-4 text-cb-text-muted" />
+            </button>
+          )}
         </div>
       </div>
 
       {showRequests && <ContactRequests onClose={() => setShowRequests(false)} />}
-      {showSearch && <SearchUsers onClose={() => setShowSearch(false)} />}
+      {showSearch && <SearchUsers onClose={closeAll} query={searchQuery} onQueryChange={setSearchQuery} />}
       {showCreateGroup && <CreateGroup onClose={() => setShowCreateGroup(false)} />}
 
       <div className="flex-1 overflow-y-auto">
