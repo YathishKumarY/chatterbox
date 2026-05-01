@@ -63,7 +63,7 @@ export function ChatWindow() {
     }
   }, [activeConversationId, fetchMessages, nextCursors, isLoadingMessages]);
 
-  const patternFill = theme === 'dark' ? '%23182229' : '%23c5bfb0';
+  const patternFill = theme === 'dark' ? '%232B2D31' : '%23E3E5E8';
 
   if (!activeConversationId || !conversation) {
     return (
@@ -116,7 +116,7 @@ export function ChatWindow() {
         className="flex-1 overflow-y-auto p-4 bg-cb-chatbg"
         style={{
           backgroundImage:
-            `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='${patternFill}' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='${patternFill}' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       >
         {isLoadingMessages && convMessages.length === 0 && (

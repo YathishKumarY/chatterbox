@@ -10,13 +10,17 @@ import { SearchUsers } from './SearchUsers';
 import { CreateGroup } from './CreateGroup';
 import { ContactRequests } from './ContactRequests';
 import { Settings } from './Settings';
-import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon } from 'lucide-react';
+import { MessageCircle, Users, Search, UserPlus, Settings as SettingsIcon, Archive, ChevronRight } from 'lucide-react';
 
 export function ConversationList() {
   const conversations = useChatStore((s) => s.conversations);
+  const archivedConversations = useChatStore((s) => s.archivedConversations);
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const fetchConversations = useChatStore((s) => s.fetchConversations);
+  const showArchived = useChatStore((s) => s.showArchived);
+  const toggleShowArchived = useChatStore((s) => s.toggleShowArchived);
+  const isLoadingArchived = useChatStore((s) => s.isLoadingArchived);
   const user = useAuthStore((s) => s.user);
   const incomingRequests = useContactStore((s) => s.incomingRequests);
   const fetchIncomingRequests = useContactStore((s) => s.fetchIncomingRequests);
@@ -25,7 +29,7 @@ export function ConversationList() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; x: number; y: number } | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ convId: string; isGroup: boolean; isArchived: boolean; x: number; y: number } | null>(null);
 
   useEffect(() => {
     fetchConversations();
@@ -94,7 +98,44 @@ export function ConversationList() {
       {showCreateGroup && <CreateGroup onClose={() => setShowCreateGroup(false)} />}
 
       <div className="flex-1 overflow-y-auto">
-        {conversations.length === 0 ? (
+        <button
+          onClick={toggleShowArchived}
+          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-cb-surface-hover border-b border-cb-border-light transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-cb-surface-active flex items-center justify-center flex-shrink-0">
+            <Archive className="w-5 h-5 text-cb-text-secondary" />
+          </div>
+          <span className="flex-1 text-sm font-medium text-cb-text-primary text-left">Archived</span>
+          <ChevronRight
+            className={`w-4 h-4 text-cb-text-muted transition-transform ${showArchived ? 'rotate-90' : ''}`}
+          />
+        </button>
+
+        {showArchived && (
+          <div className="bg-cb-surface-active/30">
+            {isLoadingArchived ? (
+              <div className="px-4 py-3 text-sm text-cb-text-muted text-center">Loading...</div>
+            ) : archivedConversations.length === 0 ? (
+              <div className="px-4 py-3 text-sm text-cb-text-muted text-center">No archived chats</div>
+            ) : (
+              archivedConversations.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conversation={conv}
+                  isActive={conv.id === activeConversationId}
+                  currentUserId={user?.id || ''}
+                  onClick={() => setActiveConversation(conv.id)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: true, x: e.clientX, y: e.clientY });
+                  }}
+                />
+              ))
+            )}
+          </div>
+        )}
+
+        {conversations.length === 0 && !showArchived ? (
           <div className="flex flex-col items-center justify-center h-full text-cb-text-muted p-4">
             <MessageCircle className="w-16 h-16 mb-2" />
             <p className="text-center">No conversations yet. Search for users to start chatting!</p>
@@ -109,7 +150,7 @@ export function ConversationList() {
               onClick={() => setActiveConversation(conv.id)}
               onContextMenu={(e) => {
                 e.preventDefault();
-                setContextMenu({ convId: conv.id, isGroup: conv.isGroup, x: e.clientX, y: e.clientY });
+                setContextMenu({ convId: conv.id, isGroup: conv.isGroup, isArchived: false, x: e.clientX, y: e.clientY });
               }}
             />
           ))
@@ -120,6 +161,7 @@ export function ConversationList() {
         <ConversationContextMenu
           conversationId={contextMenu.convId}
           isGroup={contextMenu.isGroup}
+          isArchived={contextMenu.isArchived}
           x={contextMenu.x}
           y={contextMenu.y}
           onClose={() => setContextMenu(null)}

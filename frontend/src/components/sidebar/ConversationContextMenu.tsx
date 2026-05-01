@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { useChatStore } from '../../store/chatStore';
-import { Archive, Trash2 } from 'lucide-react';
+import { Archive, ArchiveRestore, Trash2 } from 'lucide-react';
 
 interface Props {
   conversationId: string;
   isGroup: boolean;
+  isArchived: boolean;
   x: number;
   y: number;
   onClose: () => void;
 }
 
-export function ConversationContextMenu({ conversationId, isGroup, x, y, onClose }: Props) {
+export function ConversationContextMenu({ conversationId, isGroup, isArchived, x, y, onClose }: Props) {
   const archiveConversation = useChatStore((s) => s.archiveConversation);
+  const unarchiveConversation = useChatStore((s) => s.unarchiveConversation);
   const deleteConversation = useChatStore((s) => s.deleteConversation);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,8 +40,12 @@ export function ConversationContextMenu({ conversationId, isGroup, x, y, onClose
     zIndex: 100,
   };
 
-  const handleArchive = async () => {
-    await archiveConversation(conversationId);
+  const handleArchiveToggle = async () => {
+    if (isArchived) {
+      await unarchiveConversation(conversationId);
+    } else {
+      await archiveConversation(conversationId);
+    }
     onClose();
   };
 
@@ -55,11 +61,14 @@ export function ConversationContextMenu({ conversationId, isGroup, x, y, onClose
   return (
     <div ref={ref} style={menuStyle} className="bg-cb-surface border border-cb-border rounded-lg shadow-xl overflow-hidden min-w-[180px]">
       <button
-        onClick={handleArchive}
+        onClick={handleArchiveToggle}
         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-cb-text-primary hover:bg-cb-surface-hover transition-colors"
       >
-        <Archive className="w-4 h-4 text-cb-text-secondary" />
-        Archive chat
+        {isArchived
+          ? <ArchiveRestore className="w-4 h-4 text-cb-text-secondary" />
+          : <Archive className="w-4 h-4 text-cb-text-secondary" />
+        }
+        {isArchived ? 'Unarchive chat' : 'Archive chat'}
       </button>
       <button
         onClick={handleDelete}

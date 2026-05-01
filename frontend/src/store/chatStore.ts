@@ -45,18 +45,24 @@ interface Conversation {
   participants: Participant[];
   lastMessage: { content: string; createdAt: string; senderId: string | null } | null;
   unreadCount: number;
+  isArchived?: boolean;
 }
 
 interface ChatState {
   conversations: Conversation[];
+  archivedConversations: Conversation[];
   activeConversationId: string | null;
   messages: Record<string, Message[]>;
   nextCursors: Record<string, string | null>;
   isLoadingConversations: boolean;
   isLoadingMessages: boolean;
+  showArchived: boolean;
+  isLoadingArchived: boolean;
 
   setActiveConversation: (id: string | null) => void;
   fetchConversations: () => Promise<void>;
+  fetchArchivedConversations: () => Promise<void>;
+  toggleShowArchived: () => void;
   fetchMessages: (conversationId: string, loadMore?: boolean) => Promise<void>;
   addMessage: (message: Message) => void;
   addOptimisticMessage: (conversationId: string, content: string, sender: Message['sender'], clientMessageId: string) => string;
@@ -72,11 +78,14 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>((set, get) => ({
   conversations: [],
+  archivedConversations: [],
   activeConversationId: null,
   messages: {},
   nextCursors: {},
   isLoadingConversations: false,
   isLoadingMessages: false,
+  showArchived: false,
+  isLoadingArchived: false,
 
   setActiveConversation: (id) => set({ activeConversationId: id }),
 
@@ -88,6 +97,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
     } catch {
       set({ isLoadingConversations: false });
     }
+  },
+
+  fetchArchivedConversations: async () => {
+    set({ isLoadingArchived: true });
+    try {
+      const { data } = await client.get('/conversations', { params: { archived: 'true' } });
+      set({
+        archivedConversations: data.filter((c: Conversation) => c.isArchived),
+        isLoadingArchived: false,
+      });
+    } catch {
+      set({ isLoadingArchived: false });
+    }
+  },
+
+  toggleShowArchived: () => {
+    const { showArchived } = get();
+    if (!showArchived) {
+      get().fetchArchivedConversations();
+    }
+    set({ showArchived: !showArchived });
   },
 
   fetchMessages: async (conversationId, loadMore = false) => {
@@ -237,10 +267,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: state.conversations.filter((c) => c.id !== conversationId),
       activeConversationId: state.activeConversationId === conversationId ? null : state.activeConversationId,
     }));
+    if (get().showArchived) {
+      get().fetchArchivedConversations();
+    }
   },
 
   unarchiveConversation: async (conversationId) => {
     await client.post(`/conversations/${conversationId}/archive`, { archive: false });
+    set((state) => ({
+      archivedConversations: state.archivedConversations.filter((c) => c.id !== conversationId),
+    }));
     await get().fetchConversations();
   },
 
