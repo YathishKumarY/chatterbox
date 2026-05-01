@@ -16,7 +16,7 @@ export function usePushNotifications() {
   const subscribed = useRef(false);
 
   const requestPermission = useCallback(async () => {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || typeof Notification === 'undefined') return false;
 
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') return false;
@@ -42,7 +42,7 @@ export function usePushNotifications() {
   }, []);
 
   useEffect(() => {
-    if (Notification.permission === 'granted' && !subscribed.current) {
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && !subscribed.current) {
       requestPermission();
     }
   }, [requestPermission]);

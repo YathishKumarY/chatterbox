@@ -3,7 +3,7 @@ import { usePushNotifications } from '../../hooks/usePushNotifications';
 export function NotificationPrompt() {
   const { requestPermission, isSupported } = usePushNotifications();
 
-  if (!isSupported || Notification.permission === 'granted' || Notification.permission === 'denied') {
+  if (!isSupported || typeof Notification === 'undefined' || Notification.permission === 'granted' || Notification.permission === 'denied') {
     return null;
   }
 

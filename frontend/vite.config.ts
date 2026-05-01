@@ -9,6 +9,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    target: ['es2020', 'safari14'],
+  },
   server: {
     host: true,
     port: 5173,
