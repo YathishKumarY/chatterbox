@@ -56,8 +56,8 @@ export function ConversationList() {
     <div className="flex flex-col h-full bg-cb-surface relative">
       <div className="bg-cb-panel px-4 py-3 flex items-center justify-between border-b border-cb-border">
         <div className="flex items-center gap-2">
-          <MessageCircle className="w-6 h-6 text-cb-teal" />
-          <span className="font-bold text-cb-text-primary text-lg">ChatterBox</span>
+          <img src="/favicon.svg" alt="ChatterBox" className="w-7 h-7" />
+          <span className="font-bold text-cb-teal text-lg">ChatterBox</span>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           <button
