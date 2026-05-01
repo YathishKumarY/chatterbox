@@ -2,7 +2,7 @@ import { prisma } from '../config/database.js';
 import { ForbiddenError, NotFoundError, ConflictError } from '../utils/errors.js';
 import { areAllContacts } from './contact.service.js';
 
-const userSelect = { id: true, username: true, avatarUrl: true, isOnline: true, lastSeen: true } as const;
+const userSelect = { id: true, username: true, avatarUrl: true, avatarData: true, isOnline: true, lastSeen: true } as const;
 const conversationInclude = {
   participants: { include: { user: { select: userSelect } } },
 } as const;
