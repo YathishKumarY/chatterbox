@@ -8,6 +8,7 @@ interface Conversation {
   name: string | null;
   isGroup: boolean;
   avatarUrl: string | null;
+  avatarData?: string | null;
   participants: {
     userId: string;
     user: { id: string; username: string; avatarUrl: string | null; isOnline: boolean };
@@ -41,7 +42,7 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
     : undefined;
 
   const avatarUser = conversation.isGroup
-    ? { username: displayName }
+    ? { username: displayName, avatarUrl: conversation.avatarUrl, avatarData: conversation.avatarData }
     : otherParticipant?.user || { username: displayName };
 
   return (

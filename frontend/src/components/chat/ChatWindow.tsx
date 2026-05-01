@@ -91,7 +91,7 @@ export function ChatWindow() {
       <GroupInfo
         conversationId={conversation.id}
         name={displayName}
-        avatarData={(conversation as any).avatarData}
+        avatarData={conversation.avatarData}
         avatarUrl={conversation.avatarUrl}
         participants={conversation.participants as any}
         createdBy={conversation.createdBy}
@@ -106,6 +106,8 @@ export function ChatWindow() {
       <ChatHeader
         name={displayName}
         isGroup={conversation.isGroup}
+        avatarUrl={conversation.avatarUrl}
+        avatarData={conversation.avatarData}
         participants={conversation.participants}
         onBack={() => setActiveConversation(null)}
         onInfoClick={conversation.isGroup ? () => setShowGroupInfo(true) : undefined}

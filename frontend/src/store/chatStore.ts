@@ -40,6 +40,7 @@ interface Conversation {
   name: string | null;
   isGroup: boolean;
   avatarUrl: string | null;
+  avatarData?: string | null;
   createdBy: string | null;
   updatedAt?: string;
   participants: Participant[];

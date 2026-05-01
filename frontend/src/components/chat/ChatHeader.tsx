@@ -12,12 +12,14 @@ interface Participant {
 interface Props {
   name: string;
   isGroup: boolean;
+  avatarUrl?: string | null;
+  avatarData?: string | null;
   participants: Participant[];
   onBack?: () => void;
   onInfoClick?: () => void;
 }
 
-export function ChatHeader({ name, isGroup, participants, onBack, onInfoClick }: Props) {
+export function ChatHeader({ name, isGroup, avatarUrl, avatarData, participants, onBack, onInfoClick }: Props) {
   const currentUserId = useAuthStore((s) => s.user?.id);
   const activeConversationId = useChatStore((s) => s.activeConversationId);
 
@@ -55,7 +57,7 @@ export function ChatHeader({ name, isGroup, participants, onBack, onInfoClick }:
         className={`flex items-center gap-3 flex-1 min-w-0 ${onInfoClick ? 'cursor-pointer hover:opacity-80' : ''}`}
         onClick={onInfoClick}
       >
-        <UserAvatar user={isGroup ? { username: name } : (participants.find((p) => p.userId !== currentUserId)?.user || { username: name })} size="sm" />
+        <UserAvatar user={isGroup ? { username: name, avatarUrl, avatarData } : (participants.find((p) => p.userId !== currentUserId)?.user || { username: name })} size="sm" />
 
         <div className="flex-1 min-w-0">
           <h3 className="font-medium text-cb-text-primary truncate">{name}</h3>
