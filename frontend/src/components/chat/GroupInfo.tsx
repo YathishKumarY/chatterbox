@@ -62,8 +62,12 @@ export function GroupInfo({ conversationId, name, avatarData, avatarUrl, partici
   };
 
   const handleRoleChange = async (targetUserId: string, newRole: string) => {
-    await client.patch(`/conversations/${conversationId}/participants/${targetUserId}/role`, { role: newRole });
-    await fetchConversations();
+    try {
+      await client.patch(`/conversations/${conversationId}/participants/${targetUserId}/role`, { role: newRole });
+      await fetchConversations();
+    } catch {
+      // silently fail
+    }
     setRoleMenuFor(null);
   };
 
@@ -114,13 +118,13 @@ export function GroupInfo({ conversationId, name, avatarData, avatarUrl, partici
               {roleMenuFor === p.userId && (
                 <div className="absolute right-0 top-full mt-1 bg-cb-surface border border-cb-border rounded-lg shadow-xl z-50 overflow-hidden min-w-[120px]">
                   <button
-                    onClick={() => handleRoleChange(p.userId, 'admin')}
+                    onClick={(e) => { e.stopPropagation(); handleRoleChange(p.userId, 'admin'); }}
                     className={`w-full text-left px-3 py-2 text-xs hover:bg-cb-surface-hover transition-colors flex items-center gap-2 ${p.role === 'admin' ? 'text-cb-teal font-medium' : 'text-cb-text-primary'}`}
                   >
                     <Shield className="w-3.5 h-3.5" /> Admin
                   </button>
                   <button
-                    onClick={() => handleRoleChange(p.userId, 'member')}
+                    onClick={(e) => { e.stopPropagation(); handleRoleChange(p.userId, 'member'); }}
                     className={`w-full text-left px-3 py-2 text-xs hover:bg-cb-surface-hover transition-colors flex items-center gap-2 ${p.role === 'member' ? 'text-cb-teal font-medium' : 'text-cb-text-primary'}`}
                   >
                     <Users className="w-3.5 h-3.5" /> Member
