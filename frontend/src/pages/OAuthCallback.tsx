@@ -24,7 +24,7 @@ export function OAuthCallback() {
 
   return (
     <div className="min-h-screen bg-cb-bg flex items-center justify-center">
-      <div className="text-cb-dark text-lg">Signing you in...</div>
+      <div className="text-cb-teal text-lg">Signing you in...</div>
     </div>
   );
 }

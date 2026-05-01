@@ -15,7 +15,7 @@ export function MessageStatus({ statuses, isSender }: Props) {
     return <CheckCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />;
   }
   if (allDelivered) {
-    return <CheckCheck className="w-4 h-4 text-gray-400 flex-shrink-0" />;
+    return <CheckCheck className="w-4 h-4 text-cb-text-muted flex-shrink-0" />;
   }
-  return <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />;
+  return <Check className="w-4 h-4 text-cb-text-muted flex-shrink-0" />;
 }

@@ -12,7 +12,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
   }, [fetchIncomingRequests]);
 
   return (
-    <div className="border-b border-gray-200 bg-white">
+    <div className="border-b border-cb-border bg-cb-surface">
       <div className="flex items-center justify-between px-4 py-3 bg-cb-teal text-white">
         <span className="font-medium">Contact Requests</span>
         <button onClick={onClose}>
@@ -21,7 +21,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
       </div>
 
       {incomingRequests.length === 0 ? (
-        <div className="px-4 py-6 text-center text-sm text-gray-500">
+        <div className="px-4 py-6 text-center text-sm text-cb-text-secondary">
           No pending requests
         </div>
       ) : (
@@ -29,14 +29,14 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
           {incomingRequests.map((req) => (
             <div
               key={req.id}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-cb-surface-hover transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+              <div className="w-10 h-10 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold shrink-0">
                 {req.requester.username.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-gray-900 text-sm">{req.requester.username}</div>
-                <div className="text-xs text-gray-500 truncate">{req.requester.email}</div>
+                <div className="font-medium text-cb-text-primary text-sm">{req.requester.username}</div>
+                <div className="text-xs text-cb-text-secondary truncate">{req.requester.email}</div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <button
@@ -48,7 +48,7 @@ export function ContactRequests({ onClose }: { onClose: () => void }) {
                 </button>
                 <button
                   onClick={() => respondToRequest(req.id, false)}
-                  className="p-1.5 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors"
+                  className="p-1.5 rounded-full bg-cb-surface-active text-cb-text-secondary hover:bg-cb-avatar-bg transition-colors"
                   title="Reject"
                 >
                   <UserX className="w-4 h-4" />

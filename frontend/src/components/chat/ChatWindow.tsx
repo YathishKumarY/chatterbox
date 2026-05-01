@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useChatStore } from '../../store/chatStore';
 import { usePresenceStore } from '../../store/presenceStore';
 import { useAuthStore } from '../../store/authStore';
+import { useThemeStore } from '../../store/themeStore';
 import { useChat } from '../../hooks/useChat';
 import { ChatHeader } from './ChatHeader';
 import { MessageBubble } from './MessageBubble';
@@ -19,6 +20,7 @@ export function ChatWindow() {
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const currentUserId = useAuthStore((s) => s.user?.id);
   const typingUsersSet = usePresenceStore((s) => activeConversationId ? s.typingUsers[activeConversationId] : undefined);
+  const theme = useThemeStore((s) => s.theme);
   const { markAsRead } = useChat();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -58,12 +60,14 @@ export function ChatWindow() {
     }
   }, [activeConversationId, fetchMessages, nextCursors, isLoadingMessages]);
 
+  const patternFill = theme === 'dark' ? '%23182229' : '%23c5bfb0';
+
   if (!activeConversationId || !conversation) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-cb-chatbg">
-        <MessageCircle className="w-20 h-20 text-gray-300 mb-4" />
-        <h2 className="text-xl text-gray-500">ChatterBox</h2>
-        <p className="text-gray-400 mt-1">Select a conversation to start messaging</p>
+        <MessageCircle className="w-20 h-20 text-cb-text-muted mb-4" />
+        <h2 className="text-xl text-cb-text-secondary">ChatterBox</h2>
+        <p className="text-cb-text-muted mt-1">Select a conversation to start messaging</p>
       </div>
     );
   }
@@ -93,11 +97,11 @@ export function ChatWindow() {
         className="flex-1 overflow-y-auto p-4 bg-cb-chatbg"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c5bfb0' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+            `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='${patternFill}' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       >
         {isLoadingMessages && convMessages.length === 0 && (
-          <div className="text-center text-gray-400 py-4">Loading messages...</div>
+          <div className="text-center text-cb-text-muted py-4">Loading messages...</div>
         )}
 
         {convMessages.map((msg) => (

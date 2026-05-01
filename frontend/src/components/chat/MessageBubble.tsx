@@ -17,16 +17,16 @@ export function MessageBubble({ content, createdAt, isSender, senderName, isGrou
     <div className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-1`}>
       <div
         className={`max-w-[85%] md:max-w-[65%] px-3 py-1.5 rounded-lg relative overflow-hidden ${
-          isSender ? 'bg-cb-light' : 'bg-white'
+          isSender ? 'bg-cb-light' : 'bg-cb-surface'
         } ${pending ? 'opacity-60' : ''} ${failed ? 'border border-red-400' : ''} shadow-sm`}
       >
         {isGroup && !isSender && senderName && (
           <p className="text-xs font-medium text-cb-teal mb-0.5">{senderName}</p>
         )}
         <div className="flex items-end gap-1">
-          <p className="text-sm text-gray-900 whitespace-pre-wrap break-words min-w-0">{content}</p>
+          <p className="text-sm text-cb-text-primary whitespace-pre-wrap break-words min-w-0">{content}</p>
           <div className="flex items-center gap-0.5 flex-shrink-0 ml-1 -mb-0.5">
-            <span className="text-[10px] text-gray-500">{formatMessageTime(createdAt)}</span>
+            <span className="text-[10px] text-cb-text-secondary">{formatMessageTime(createdAt)}</span>
             <MessageStatus statuses={statuses} isSender={isSender} />
           </div>
         </div>

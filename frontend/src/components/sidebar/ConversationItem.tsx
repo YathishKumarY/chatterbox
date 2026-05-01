@@ -37,28 +37,28 @@ export function ConversationItem({ conversation, isActive, currentUserId, onClic
   return (
     <div
       onClick={onClick}
-      className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 transition-colors ${
+      className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-cb-surface-hover border-b border-cb-border-light transition-colors ${
         isActive ? 'bg-cb-panel' : ''
       }`}
     >
       <div className="relative flex-shrink-0">
-        <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold text-lg">
+        <div className="w-12 h-12 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white font-bold text-lg">
           {displayName.charAt(0).toUpperCase()}
         </div>
         {online && (
-          <div className="absolute bottom-0 right-0 w-3 h-3 bg-cb-green rounded-full border-2 border-white" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 bg-cb-green rounded-full border-2 border-cb-surface" />
         )}
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <span className="font-medium text-gray-900 truncate">{displayName}</span>
+          <span className="font-medium text-cb-text-primary truncate">{displayName}</span>
           {lastMessage && (
-            <span className="text-xs text-gray-500 flex-shrink-0">{formatTime(lastMessage.createdAt)}</span>
+            <span className="text-xs text-cb-text-secondary flex-shrink-0">{formatTime(lastMessage.createdAt)}</span>
           )}
         </div>
         <div className="flex items-center justify-between mt-0.5">
-          <p className="text-sm text-gray-500 truncate">
+          <p className="text-sm text-cb-text-secondary truncate">
             {lastMessage
               ? `${conversation.isGroup && senderName ? `${senderName}: ` : ''}${lastMessage.content}`
               : 'No messages yet'}

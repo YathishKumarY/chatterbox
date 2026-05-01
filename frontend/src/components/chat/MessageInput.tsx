@@ -1,5 +1,6 @@
 import { useState, FormEvent, useRef, useEffect, useCallback } from 'react';
 import { useChat } from '../../hooks/useChat';
+import { useThemeStore } from '../../store/themeStore';
 import { Send, Smile } from 'lucide-react';
 import EmojiPicker, { Theme, EmojiClickData } from 'emoji-picker-react';
 
@@ -9,6 +10,7 @@ export function MessageInput() {
   const { sendMessage, emitTyping } = useChat();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const appTheme = useThemeStore((s) => s.theme);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -71,13 +73,13 @@ export function MessageInput() {
         <button
           type="button"
           onClick={() => setShowPicker((v) => !v)}
-          className="p-2 rounded-full hover:bg-gray-200 transition-colors text-gray-600 flex-shrink-0"
+          className="p-2 rounded-full hover:bg-cb-surface-active transition-colors text-cb-text-secondary flex-shrink-0"
         >
           <Smile className="w-5 h-5" />
         </button>
         {showPicker && (
           <div className="absolute bottom-full mb-2 left-0 z-50 max-w-[calc(100vw-2rem)]">
-            <EmojiPicker theme={Theme.LIGHT} onEmojiClick={onEmojiClick} />
+            <EmojiPicker theme={appTheme === 'dark' ? Theme.DARK : Theme.LIGHT} onEmojiClick={onEmojiClick} />
           </div>
         )}
       </div>
@@ -88,7 +90,7 @@ export function MessageInput() {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         rows={1}
-        className="flex-1 bg-white rounded-lg px-4 py-2 outline-none resize-none text-sm max-h-32 border border-gray-200 focus:border-cb-teal"
+        className="flex-1 bg-cb-surface rounded-lg px-4 py-2 outline-none resize-none text-sm max-h-32 border border-cb-border focus:border-cb-teal text-cb-text-primary placeholder:text-cb-text-muted"
         placeholder="Type a message"
         style={{ minHeight: '40px' }}
       />

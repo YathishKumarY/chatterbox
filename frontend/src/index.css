@@ -2,6 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --cb-bg: 236 229 221;
+    --cb-chatbg: 229 221 213;
+    --cb-panel: 237 237 237;
+    --cb-light: 220 248 198;
+    --cb-surface: 255 255 255;
+    --cb-surface-hover: 249 250 251;
+    --cb-surface-active: 243 244 246;
+    --cb-input-bg: 243 244 246;
+    --cb-border: 229 231 235;
+    --cb-border-light: 243 244 246;
+    --cb-text-primary: 17 24 39;
+    --cb-text-secondary: 107 114 128;
+    --cb-text-muted: 156 163 175;
+    --cb-avatar-bg: 209 213 219;
+    --cb-pattern-fill: #c5bfb0;
+  }
+
+  .dark {
+    --cb-bg: 17 27 33;
+    --cb-chatbg: 11 20 26;
+    --cb-panel: 32 44 51;
+    --cb-light: 0 92 75;
+    --cb-surface: 31 44 51;
+    --cb-surface-hover: 38 52 60;
+    --cb-surface-active: 44 58 66;
+    --cb-input-bg: 38 52 60;
+    --cb-border: 44 58 66;
+    --cb-border-light: 38 52 60;
+    --cb-text-primary: 233 237 239;
+    --cb-text-secondary: 145 161 171;
+    --cb-text-muted: 107 122 132;
+    --cb-avatar-bg: 54 68 76;
+    --cb-pattern-fill: #182229;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -16,6 +54,14 @@ body {
   border-radius: 3px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }

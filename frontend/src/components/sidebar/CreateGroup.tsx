@@ -46,7 +46,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="border-b border-gray-200 bg-white">
+    <div className="border-b border-cb-border bg-cb-surface">
       <div className="flex items-center justify-between px-4 py-3 bg-cb-teal text-white">
         <span className="font-medium">{step === 'select' ? 'Add group members' : 'Group name'}</span>
         <button onClick={onClose}>
@@ -57,7 +57,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
       {step === 'select' && (
         <>
           {selected.length > 0 && (
-            <div className="flex flex-wrap gap-2 px-4 py-2 bg-gray-50">
+            <div className="flex flex-wrap gap-2 px-4 py-2 bg-cb-surface-hover">
               {selected.map((u) => (
                 <span
                   key={u.id}
@@ -73,12 +73,12 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
           )}
 
           <div className="flex items-center gap-2 px-4 py-2">
-            <Search className="w-4 h-4 text-gray-400" />
+            <Search className="w-4 h-4 text-cb-text-muted" />
             <input
               type="text"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm"
+              className="flex-1 bg-transparent outline-none text-sm text-cb-text-primary placeholder:text-cb-text-muted"
               placeholder="Search contacts..."
               autoFocus
             />
@@ -86,7 +86,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
 
           <div className="max-h-48 overflow-y-auto">
             {filtered.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-500">
+              <div className="px-4 py-3 text-sm text-cb-text-secondary">
                 {contacts.length === 0 ? 'No contacts yet. Add contacts first!' : 'No matching contacts'}
               </div>
             ) : (
@@ -96,12 +96,12 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
                   <button
                     key={user.id}
                     onClick={() => toggleUser(user)}
-                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50"
+                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-cb-surface-hover"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white text-sm font-bold">
+                    <div className="w-8 h-8 rounded-full bg-cb-avatar-bg flex items-center justify-center text-white text-sm font-bold">
                       {user.username.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-sm flex-1 text-left">{user.username}</span>
+                    <span className="text-sm flex-1 text-left text-cb-text-primary">{user.username}</span>
                     {isSelected && <Check className="w-4 h-4 text-cb-teal" />}
                   </button>
                 );
@@ -128,7 +128,7 @@ export function CreateGroup({ onClose }: { onClose: () => void }) {
             type="text"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-cb-teal"
+            className="w-full px-4 py-2 border border-cb-border rounded-lg outline-none focus:ring-2 focus:ring-cb-teal bg-cb-surface text-cb-text-primary placeholder:text-cb-text-muted"
             placeholder="Group name"
             autoFocus
           />

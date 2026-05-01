@@ -19,7 +19,7 @@ export function Chat() {
   if (!user) {
     return (
       <div className="min-h-screen bg-cb-bg flex items-center justify-center">
-        <div className="text-cb-dark text-lg">Loading...</div>
+        <div className="text-cb-teal text-lg">Loading...</div>
       </div>
     );
   }

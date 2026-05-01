@@ -59,7 +59,7 @@ export function AppLayout() {
   return (
     <div className="flex h-screen bg-cb-bg overflow-hidden">
       <div
-        className={`border-r border-gray-200 ${
+        className={`border-r border-cb-border ${
           activeConversationId ? 'hidden md:flex md:flex-col' : 'flex flex-col w-full md:w-auto'
         }`}
         style={isMobile ? undefined : { width: sidebarWidth, minWidth: MIN_WIDTH, maxWidth: MAX_WIDTH }}
