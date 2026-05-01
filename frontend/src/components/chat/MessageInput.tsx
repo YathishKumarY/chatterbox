@@ -4,10 +4,6 @@ import { useThemeStore } from '../../store/themeStore';
 import { Send, Smile } from 'lucide-react';
 import EmojiPicker, { Theme, EmojiClickData, SkinTones, SkinTonePickerLocation } from 'emoji-picker-react';
 
-function unifiedToNative(unified: string): string {
-  return unified.split('-').map((hex) => String.fromCodePoint(parseInt(hex, 16))).join('');
-}
-
 export function MessageInput() {
   const [content, setContent] = useState('');
   const [showPicker, setShowPicker] = useState(false);
@@ -57,21 +53,20 @@ export function MessageInput() {
   };
 
   const onEmojiClick = useCallback((emojiData: EmojiClickData) => {
-    const emoji = emojiData.isCustom ? emojiData.emoji : unifiedToNative(emojiData.unified);
     const textarea = inputRef.current;
     if (textarea) {
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-      const newContent = content.slice(0, start) + emoji + content.slice(end);
+      const newContent = content.slice(0, start) + emojiData.emoji + content.slice(end);
       setContent(newContent);
       requestAnimationFrame(() => {
-        const pos = start + emoji.length;
+        const pos = start + emojiData.emoji.length;
         textarea.selectionStart = pos;
         textarea.selectionEnd = pos;
         textarea.focus();
       });
     } else {
-      setContent((prev) => prev + emoji);
+      setContent((prev) => prev + emojiData.emoji);
     }
     setShowPicker(false);
   }, [content]);
@@ -89,11 +84,10 @@ export function MessageInput() {
         {showPicker && (
           <div className="absolute bottom-full mb-2 left-0 z-50 max-w-[calc(100vw-2rem)]">
             <EmojiPicker
-              key={skinTone}
               theme={appTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
               onEmojiClick={onEmojiClick}
               defaultSkinTone={skinTone}
-              skinTonePickerLocation={SkinTonePickerLocation.SEARCH}
+              skinTonePickerLocation={SkinTonePickerLocation.PREVIEW}
               onSkinToneChange={(tone) => {
                 setSkinTone(tone);
                 localStorage.setItem('chatterbox-skin-tone', tone);
