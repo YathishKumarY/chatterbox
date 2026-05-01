@@ -34,8 +34,8 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', express.json({ limit: '2mb' }), userRoutes);
-app.use('/api/conversations', conversationRoutes);
-app.use('/api/conversations', messageRoutes);
+app.use('/api/conversations', express.json({ limit: '2mb' }), conversationRoutes);
+app.use('/api/conversations', express.json({ limit: '2mb' }), messageRoutes);
 app.use('/api/push', pushRoutes);
 app.use('/api/contacts', contactRoutes);
 

@@ -88,7 +88,10 @@ export function ChatWindow() {
   if (showGroupInfo && conversation.isGroup) {
     return (
       <GroupInfo
+        conversationId={conversation.id}
         name={displayName}
+        avatarData={(conversation as any).avatarData}
+        avatarUrl={conversation.avatarUrl}
         participants={conversation.participants as any}
         createdBy={conversation.createdBy}
         currentUserId={currentUserId || ''}

@@ -167,3 +167,55 @@ export async function removeParticipant(conversationId: string, userId: string, 
     where: { userId_conversationId: { userId, conversationId } },
   });
 }
+
+export async function updateGroup(
+  conversationId: string,
+  requesterId: string,
+  data: { name?: string; avatarUrl?: string; avatarData?: string | null },
+) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+    include: { participants: true },
+  });
+
+  if (!conversation) throw new NotFoundError('Conversation not found');
+  if (!conversation.isGroup) throw new ForbiddenError('Not a group conversation');
+
+  const requester = conversation.participants.find(p => p.userId === requesterId);
+  if (!requester || requester.role !== 'admin') throw new ForbiddenError('Only admins can update group info');
+
+  return prisma.conversation.update({
+    where: { id: conversationId },
+    data,
+    include: conversationInclude,
+  });
+}
+
+export async function updateParticipantRole(
+  conversationId: string,
+  targetUserId: string,
+  requesterId: string,
+  newRole: string,
+) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+    include: { participants: true },
+  });
+
+  if (!conversation) throw new NotFoundError('Conversation not found');
+  if (!conversation.isGroup) throw new ForbiddenError('Not a group conversation');
+
+  const requester = conversation.participants.find(p => p.userId === requesterId);
+  if (!requester || requester.role !== 'admin') throw new ForbiddenError('Only admins can change roles');
+
+  const target = conversation.participants.find(p => p.userId === targetUserId);
+  if (!target) throw new NotFoundError('User is not a member of this group');
+
+  if (targetUserId === conversation.createdBy) throw new ForbiddenError('Cannot change the group creator\'s role');
+
+  return prisma.conversationParticipant.update({
+    where: { userId_conversationId: { userId: targetUserId, conversationId } },
+    data: { role: newRole },
+    include: { user: { select: userSelect } },
+  });
+}

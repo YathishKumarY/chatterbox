@@ -83,4 +83,24 @@ router.delete('/:id/participants/:userId', async (req: Request<{ id: string; use
   }
 });
 
+router.patch('/:id', async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { name, avatarUrl, avatarData } = req.body;
+    const conversation = await conversationService.updateGroup(req.params.id, req.user!.userId, { name, avatarUrl, avatarData });
+    res.json(conversation);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch('/:id/participants/:userId/role', async (req: Request<{ id: string; userId: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { role } = req.body;
+    const participant = await conversationService.updateParticipantRole(req.params.id, req.params.userId, req.user!.userId, role);
+    res.json(participant);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
