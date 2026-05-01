@@ -6,10 +6,10 @@ export default {
     extend: {
       colors: {
         cb: {
-          green: '#4CAF82',
-          dark: '#4A4377',
+          green: '#23A559',
+          dark: '#4752C4',
           light: 'rgb(var(--cb-light) / <alpha-value>)',
-          teal: '#635A9D',
+          teal: '#5865F2',
           bg: 'rgb(var(--cb-bg) / <alpha-value>)',
           chatbg: 'rgb(var(--cb-chatbg) / <alpha-value>)',
           panel: 'rgb(var(--cb-panel) / <alpha-value>)',
