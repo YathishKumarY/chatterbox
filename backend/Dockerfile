@@ -27,7 +27,7 @@ COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=build /app/dist ./dist
 COPY prisma ./prisma
 
-EXPOSE 3001
+EXPOSE ${PORT:-3001}
 
 # Default to production. Override CMD in docker-compose.yml for dev.
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]

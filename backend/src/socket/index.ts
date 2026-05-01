@@ -23,8 +23,7 @@ const HEARTBEAT_INTERVAL = 10_000;
 
 let ioInstance: Server | null = null;
 
-export function getIO(): Server {
-  if (!ioInstance) throw new Error('Socket.IO not initialized');
+export function getIO(): Server | null {
   return ioInstance;
 }
 

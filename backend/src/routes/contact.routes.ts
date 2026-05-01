@@ -23,22 +23,24 @@ router.post('/', validate(sendRequestSchema), async (req: Request, res: Response
     const contact = await contactService.sendRequest(req.user!.userId, req.body.addresseeId);
 
     const io = getIO();
-    const socketIds = await presenceService.getUserSocketIds(contact.addresseeId);
-    for (const sid of socketIds) {
-      io.to(sid).emit('contact:request', {
-        id: contact.id,
-        status: contact.status,
-        requester: contact.requester,
-      });
-    }
-
-    if (contact.status === 'accepted') {
-      const requesterSocketIds = await presenceService.getUserSocketIds(contact.requesterId);
-      for (const sid of requesterSocketIds) {
-        io.to(sid).emit('contact:accepted', {
+    if (io) {
+      const socketIds = await presenceService.getUserSocketIds(contact.addresseeId);
+      for (const sid of socketIds) {
+        io.to(sid).emit('contact:request', {
           id: contact.id,
-          user: contact.addressee,
+          status: contact.status,
+          requester: contact.requester,
         });
+      }
+
+      if (contact.status === 'accepted') {
+        const requesterSocketIds = await presenceService.getUserSocketIds(contact.requesterId);
+        for (const sid of requesterSocketIds) {
+          io.to(sid).emit('contact:accepted', {
+            id: contact.id,
+            user: contact.addressee,
+          });
+        }
       }
     }
 
@@ -72,12 +74,14 @@ router.patch('/:id', validate(respondSchema), async (req: Request<{ id: string }
 
     if (contact.status === 'accepted') {
       const io = getIO();
-      const requesterSocketIds = await presenceService.getUserSocketIds(contact.requesterId);
-      for (const sid of requesterSocketIds) {
-        io.to(sid).emit('contact:accepted', {
-          id: contact.id,
-          user: contact.addressee,
-        });
+      if (io) {
+        const requesterSocketIds = await presenceService.getUserSocketIds(contact.requesterId);
+        for (const sid of requesterSocketIds) {
+          io.to(sid).emit('contact:accepted', {
+            id: contact.id,
+            user: contact.addressee,
+          });
+        }
       }
     }
 

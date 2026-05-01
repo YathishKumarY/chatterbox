@@ -23,14 +23,16 @@ router.post('/', validate(createSchema), async (req: Request, res: Response, nex
     const conversation = await conversationService.createConversation(req.user!.userId, req.body);
 
     const io = getIO();
-    for (const p of conversation.participants) {
-      const socketIds = await presenceService.getUserSocketIds(p.userId);
-      for (const sid of socketIds) {
-        io.in(sid).socketsJoin(`conversation:${conversation.id}`);
-      }
-      if (socketIds.length > 0) {
+    if (io) {
+      for (const p of conversation.participants) {
+        const socketIds = await presenceService.getUserSocketIds(p.userId);
         for (const sid of socketIds) {
-          io.to(sid).emit('conversation:created', conversation);
+          io.in(sid).socketsJoin(`conversation:${conversation.id}`);
+        }
+        if (socketIds.length > 0) {
+          for (const sid of socketIds) {
+            io.to(sid).emit('conversation:created', conversation);
+          }
         }
       }
     }
